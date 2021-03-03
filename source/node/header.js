@@ -11,7 +11,7 @@ fs.writeFileSync('./bundle/header.js', `// ==UserScript==
 // @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/legend-of-valkyrie/source/image/wakuang.png#12.7kb
 // @homepage     https://greasyfork.org/scripts/422519
 // @supportURL   https://github.com/coderzhaoziwei/legend-of-valkyrie/issues
-// @updateURL    https://github.com/coderzhaoziwei/legend-of-valkyrie/raw/main/bundle/legend_of_valkyrie.user.js
+// @updateURL    https://github.com/coderzhaoziwei/legend-of-valkyrie/raw/main/bundle/valkyrie.min.user.js
 // @match        http://*.wsmud.com/*
 // @exclude      http://*.wsmud.com/news*
 // @exclude      http://*.wsmud.com/pay*
