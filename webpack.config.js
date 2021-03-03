@@ -2,6 +2,7 @@ const mode = 'production'
 const entry = './source/index.js'
 const path = require('path').resolve(__dirname, '')
 const rules = [
+  { test: /TimeWorkerContent\.js$/, use: './source/loader/text.loader.js' },
   { test: /\.css$/, use: './source/loader/text.loader.js' },
   { test: /\.html$/, use: './source/loader/text.loader.js' },
 ]
