@@ -7,11 +7,11 @@ const banner = `// ==UserScript==
 // @namespace    com.coderzhaoziwei.valkyrie
 // @version      ${config.version}
 // @author       Coder Zhao
-// @description  《武神传说》脚本
+// @description  《武神传说》浏览器脚本程序 | Valkyrie
 // @modified     ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString('en-DE')}
 // @license      MIT
-// @homepage     https://greasyfork.org/zh-CN/scripts/000000
-// @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/legend-of-valkyrie/source/images/icon.png#12.7kb
+// @homepage     https://greasyfork.org/zh-CN/scripts/422519
+// @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/legend-of-valkyrie/source/image/wakuang.png#12.7kb
 // @match        http://*.wsmud.com/*
 // @exclude      http://*.wsmud.com/news*
 // @exclude      http://*.wsmud.com/pay*
@@ -25,6 +25,8 @@ const banner = `// ==UserScript==
 // @grant        GM_listValues
 // @grant        GM_deleteValue
 // @grant        GM_setClipboard
+// @grant        GM_notification
+// @grant        GM_registerMenuCommand
 // ==/UserScript==`
 
 module.exports = {
@@ -32,7 +34,7 @@ module.exports = {
   entry: './source/index.js',
   output: {
     path: path.resolve(__dirname, ''),
-    filename: `valkyrie.user.js`,
+    filename: `bundle/legend_of_valkyrie.user.js`,
   },
   module: {
     rules: [

@@ -1,17 +1,17 @@
 {
-  "/* 单行注释 */": {
+  "单行注释": {
     "scope": "javascript,typescript",
     "prefix": "ll",
-    "body": ["/* ${1:comments} */"],
+    "body": ["/* ${1:Comments} */"],
     "description": "创建单行注释",
   },
-  "/* 多行注释 */": {
+  "多行注释": {
     "scope": "javascript,typescript",
     "prefix": "lll",
-    "body": ["/**", " * ${1:comments}", " */"],
+    "body": ["/**", " * ${1:Comments}", " */"],
     "description": "创建多行注释",
   },
-  "console.log()": {
+  "日志输出": {
 		"scope": "javascript,typescript",
 		"prefix": "con",
 		"body": ["console.log($1)", ""],
@@ -19,6 +19,11 @@
   "导入模块": {
 		"scope": "javascript,typescript",
 		"prefix": "imp",
-		"body": ["import $1 from '$1'", ""],
+		"body": ["import Default from '${1:Path}'", ""],
+  },
+  "监听事件 - Valkyrie": {
+    "scope": "javascript",
+    "prefix": "val",
+    "body": ["Valkyrie.on('${1:Type}', function(data) {", "  ", "})"],
   },
 }
