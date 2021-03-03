@@ -1,45 +1,49 @@
+import Sender from './Sender'
 import EventEmitter from './EventEmitter'
 
 class WebSocket {
   constructor() {
     this.ws = undefined
     this.wsOnMessage = undefined
+    this.sender = new Sender()
     this.eventEmitter = new EventEmitter()
     this.init()
   }
   init() {
     console.log('WebSocket: init')
-    const instance = this
+    const self = this
     if (window.WebSocket) {
       unsafeWindow.WebSocket = function(uri) {
-        instance.ws = new window.WebSocket(uri)
+        self.ws = new window.WebSocket(uri)
       }
       unsafeWindow.WebSocket.prototype = {
         set onopen(fn) {
           console.log('WebSocket: set onopen')
-          instance.ws.onopen = fn
+          self.ws.onopen = fn
+          /* 初始化指令发送 */
+          self.sender.send = self.ws.send
         },
         set onclose(fn) {
           console.log('WebSocket: set onclose')
-          instance.ws.onclose = fn
+          self.ws.onclose = fn
         },
         set onerror(fn) {
           console.log('WebSocket: set onerror')
-          instance.ws.onerror = fn
+          self.ws.onerror = fn
         },
         set onmessage(fn) {
           console.log('WebSocket: set onmessage')
-          instance.wsOnMessage = fn
-          instance.ws.onmessage = event =>  instance.onMessage(event)
+          self.wsOnMessage = fn
+          self.ws.onmessage = event =>  self.onMessage(event)
         },
         get readyState() {
-          const state = instance.ws.readyState
+          const state = self.ws.readyState
           if (state !== 1) {
             console.log(`WebSocket: get readyState => ${state}`)
           }
           return state
         },
-        send: command => instance.onSend(command),
+        send: command => self.onSend(command),
       }
     } else {
       throw new Error('WebSocket is undefined.')
@@ -56,9 +60,13 @@ class WebSocket {
     const event = data2event(data)
     if (this.ws && this.wsOnMessage) this.wsOnMessage(event)
   }
-  onSend(command) {
-    console.log(command)
-    this.ws.send(command)
+  onSend(...args) {
+    args.forEach((item, index) => {
+      if (typeof item === 'string' && /^(?!setting)/.test(item) && /,/.test(item)) {
+        args[index] = item.split(',')
+      }
+    })
+    this.sender.push(args.flat(Infinity))
   }
 }
 
