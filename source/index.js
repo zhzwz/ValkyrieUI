@@ -1,8 +1,6 @@
-import './handler/type/roles'
-import './handler/type/login'
-import './handler/type/state'
-import './handler/type/combat'
-import './handler/type/die'
+import { initUnsafeWindowTimeWorker } from './library/TimeWorker'
+
+initUnsafeWindowTimeWorker()
 
 document.addEventListener('DOMContentLoaded', function() {
   const url = GM_info.script.icon
@@ -13,9 +11,15 @@ document.addEventListener('DOMContentLoaded', function() {
   document.head.appendChild(element)
 }, false)
 
-GM_registerMenuCommand('Greasy Fork', function() {
+GM_registerMenuCommand('GreasyFork Index', function() {
   window.open('https://greasyfork.org/scripts/422519')
 })
-GM_registerMenuCommand('Github ', function() {
+GM_registerMenuCommand('Github Repo', function() {
   window.open('https://github.com/coderzhaoziwei/legend-of-valkyrie')
 })
+
+import './handler/type/roles'
+import './handler/type/login'
+import './handler/type/state'
+import './handler/type/combat'
+import './handler/type/die'

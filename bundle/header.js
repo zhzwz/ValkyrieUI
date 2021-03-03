@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Legend of Valkyrie
 // @namespace    com.coderzhaoziwei.valkyrie
-// @version      0.0.72
+// @version      0.0.86
 // @author       Coder Zhao
 // @description  《武神传说》浏览器脚本程序 | Valkyrie
-// @modified     2021/3/3 17:26:45
+// @modified     2021/3/4 00:03:47
 // @license      MIT
 // @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/legend-of-valkyrie/source/image/wakuang.png#12.7kb
-// @homepage     https://greasyfork.org/scripts/422519
+// @homepage     https://greasyfork.org/scripts/422519-legend-of-valkyrie
 // @supportURL   https://github.com/coderzhaoziwei/legend-of-valkyrie/issues
 // @updateURL    https://github.com/coderzhaoziwei/legend-of-valkyrie/raw/main/bundle/valkyrie.min.user.js
 // @match        http://*.wsmud.com/*

@@ -2,6 +2,111 @@
 /******/ 	"use strict";
 var __webpack_exports__ = {};
 
+;// CONCATENATED MODULE: ./source/library/TimeWorkerContent.js
+/* harmony default export */ const TimeWorkerContent = ("self.onmessage = function(event) {\n  const { type, counter, timeout, id } = event.data\n  if (type === 'setTimeout' || type === 'setInterval') {\n    const id = type === 'setTimeout'\n      ? setTimeout (() => self.postMessage({ type: 'setTimeout',  counter }), timeout)\n      : setInterval(() => self.postMessage({ type: 'setInterval', counter }), timeout)\n    self.postMessage({ type: 'set', counter, id })\n  } else if (type === 'clearTimeout' || type === 'clearInterval') {\n    if (type === 'clearTimeout') clearTimeout(id)\n    else if (type === 'clearInterval') clearInterval(id)\n    self.postMessage({ type: 'clear', counter })\n  }\n}\n");
+;// CONCATENATED MODULE: ./source/library/TimeWorker.js
+
+
+class TimeWorker {
+  constructor() {
+    this.counter = Number()
+    this.container = Object()
+    this.worker = new Worker(URL.createObjectURL(new Blob([TimeWorkerContent])))
+    this.worker.onmessage = this.onmessage.bind(this)
+  }
+  onmessage(event) {
+    const { type, counter, id } = event.data
+    if (type === 'set') this.container[counter].id = id
+    else if (type === 'clear') delete this.container[counter]
+    else if (type === 'setTimeout' || type === 'setInterval') {
+      if (this.container[counter]) {
+        const callback = this.container[counter].callback
+        const args = this.container[counter].args
+        callback(...args)
+        if (type === 'setTimeout') delete this.container[counter]
+      }
+    }
+  }
+  setTimeout(callback, timeout, ...args) {
+    return this.setTimeWorker('setTimeout', callback, timeout, ...args)
+  }
+  clearTimeout(counter) {
+    this.clearTimeWorker('clearTimeout', counter)
+  }
+  setInterval(callback, timeout, ...args) {
+    return this.setTimeWorker('setInterval', callback, timeout, ...args)
+  }
+  clearInterval(counter) {
+    this.clearTimeWorker('clearInterval', counter)
+  }
+  setTimeWorker(type, callback, timeout, ...args) {
+    const counter = ++ this.counter
+    this.container[counter] = Object()
+    this.container[counter].callback = callback
+    this.container[counter].args = args
+    this.worker.postMessage({ type, counter, timeout })
+    return counter
+  }
+  clearTimeWorker(type, counter) {
+    if (this.container[counter]) {
+      const id = this.container[counter].id
+      this.worker.postMessage({ type, counter, id })
+    }
+  }
+}
+
+/* harmony default export */ const library_TimeWorker = ((/* unused pure expression or super */ null && (TimeWorker)));
+
+const initUnsafeWindowTimeWorker = function() {
+  const timeWorker = new TimeWorker()
+  unsafeWindow.setTimeout = timeWorker.setTimeout.bind(timeWorker)
+  unsafeWindow.setInterval = timeWorker.setInterval.bind(timeWorker)
+  unsafeWindow.clearTimeout = timeWorker.clearTimeout.bind(timeWorker)
+  unsafeWindow.clearInterval = timeWorker.clearInterval.bind(timeWorker)
+}
+
+;// CONCATENATED MODULE: ./source/library/Sender.js
+class Sender {
+  constructor() {
+    this.queue = []
+    this.active = false
+    this.action = undefined
+  }
+  push(args) {
+    this.queue.push(...args)
+    if (this.active === false) {
+      this.active = true
+      this.loop()
+    }
+  }
+  loop() {
+    const cmd = this.queue.splice(0, 1)[0]
+
+    if (!this.active) {
+      return
+    } else if (!cmd) {
+      this.active = false
+      return
+    } else if (!this.action) {
+      console.log('Sender has been destroyed.')
+      this.active = false
+      this.queue.splice(0)
+      return
+    } else if (!isNaN(Number(cmd))) {
+      console.log(`Sender will wait for ${ cmd }ms.`)
+      setTimeout(() => this.loop(), Number(cmd))
+      return
+    } else if (typeof cmd === 'string') {
+      console.log(`"${ cmd }"`)
+    }
+
+    this.action(cmd)
+    setTimeout(() => this.loop(), 256)
+  }
+}
+
+/* harmony default export */ const library_Sender = (Sender);
+
 ;// CONCATENATED MODULE: ./source/library/EventEmitter.js
 class EventEmitter {
   constructor() {
@@ -46,46 +151,50 @@ class EventEmitter {
 ;// CONCATENATED MODULE: ./source/library/WebSocket.js
 
 
+
 class WebSocket {
   constructor() {
     this.ws = undefined
     this.wsOnMessage = undefined
+    this.sender = new library_Sender()
     this.eventEmitter = new library_EventEmitter()
     this.init()
   }
   init() {
     console.log('WebSocket: init')
-    const instance = this
+    const self = this
     if (window.WebSocket) {
       unsafeWindow.WebSocket = function(uri) {
-        instance.ws = new window.WebSocket(uri)
+        self.ws = new window.WebSocket(uri)
       }
       unsafeWindow.WebSocket.prototype = {
         set onopen(fn) {
           console.log('WebSocket: set onopen')
-          instance.ws.onopen = fn
+          self.ws.onopen = fn
+          /* 初始化指令发送 */
+          self.sender.send = self.ws.send
         },
         set onclose(fn) {
           console.log('WebSocket: set onclose')
-          instance.ws.onclose = fn
+          self.ws.onclose = fn
         },
         set onerror(fn) {
           console.log('WebSocket: set onerror')
-          instance.ws.onerror = fn
+          self.ws.onerror = fn
         },
         set onmessage(fn) {
           console.log('WebSocket: set onmessage')
-          instance.wsOnMessage = fn
-          instance.ws.onmessage = event =>  instance.onMessage(event)
+          self.wsOnMessage = fn
+          self.ws.onmessage = event =>  self.onMessage(event)
         },
         get readyState() {
-          const state = instance.ws.readyState
+          const state = self.ws.readyState
           if (state !== 1) {
             console.log(`WebSocket: get readyState => ${state}`)
           }
           return state
         },
-        send: command => instance.onSend(command),
+        send: command => self.onSend(command),
       }
     } else {
       throw new Error('WebSocket is undefined.')
@@ -102,9 +211,13 @@ class WebSocket {
     const event = data2event(data)
     if (this.ws && this.wsOnMessage) this.wsOnMessage(event)
   }
-  onSend(command) {
-    console.log(command)
-    this.ws.send(command)
+  onSend(...args) {
+    args.forEach((item, index) => {
+      if (typeof item === 'string' && /^(?!setting)/.test(item) && /,/.test(item)) {
+        args[index] = item.split(',')
+      }
+    })
+    this.sender.push(args.flat(Infinity))
   }
 }
 
@@ -298,9 +411,7 @@ library_Valkyrie.on('die', function(data) {
 ;// CONCATENATED MODULE: ./source/index.js
 
 
-
-
-
+initUnsafeWindowTimeWorker()
 
 document.addEventListener('DOMContentLoaded', function() {
   const url = GM_info.script.icon
@@ -311,12 +422,18 @@ document.addEventListener('DOMContentLoaded', function() {
   document.head.appendChild(element)
 }, false)
 
-GM_registerMenuCommand('Greasy Fork', function() {
+GM_registerMenuCommand('GreasyFork Index', function() {
   window.open('https://greasyfork.org/scripts/422519')
 })
-GM_registerMenuCommand('Github ', function() {
+GM_registerMenuCommand('Github Repo', function() {
   window.open('https://github.com/coderzhaoziwei/legend-of-valkyrie')
 })
+
+;
+
+
+
+
 
 /******/ })()
 ;
