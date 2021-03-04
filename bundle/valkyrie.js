@@ -55,15 +55,10 @@ class TimeWorker {
   }
 }
 
-/* harmony default export */ const library_TimeWorker = ((/* unused pure expression or super */ null && (TimeWorker)));
-
-const initUnsafeWindowTimeWorker = function() {
-  const timeWorker = new TimeWorker()
-  unsafeWindow.setTimeout = timeWorker.setTimeout.bind(timeWorker)
-  unsafeWindow.setInterval = timeWorker.setInterval.bind(timeWorker)
-  unsafeWindow.clearTimeout = timeWorker.clearTimeout.bind(timeWorker)
-  unsafeWindow.clearInterval = timeWorker.clearInterval.bind(timeWorker)
-}
+/* 替换全局的四个时间方法 */
+const worker = new TimeWorker()
+const fns = ['setTimeout', 'setInterval', 'clearTimeout', 'clearInterval']
+fns.forEach(fn => unsafeWindow[fn] = worker[fn].bind(worker))
 
 ;// CONCATENATED MODULE: ./source/library/Sender.js
 class Sender {
@@ -266,6 +261,8 @@ const Valkyrie = new Vue({
     roles: Object(),
     id: String(),
     state: String(),
+    room: Object(),
+    prop: Object(),
   },
   computed: {
     role() {
@@ -281,9 +278,29 @@ const Valkyrie = new Vue({
     server() {
       return this.role ? this.role.server : GM_info.script.version
     },
-    documentTitle() { /* 网页标题同步角色状态 */
+    /* 网页标题同步角色状态 */
+    documentTitle() {
       return `${this.name} ${this.state} ${this.server}`.trim()
     },
+    npcs() {
+      const list = Array()
+      if (this.room.items instanceof Array) {
+        this.room.items.forEach(item => item.isNpc && list.push(item))
+      }
+      return list
+    },
+
+    jy()   { return parseInt(this.prop.exp       ) || 0 },
+    qn()   { return parseInt(this.prop.pot       ) || 0 },
+    hp1()  { return parseInt(this.prop.hp        ) || 0 },
+    hp2()  { return parseInt(this.prop.max_mp    ) || 0 },
+    mp1()  { return parseInt(this.prop.mp        ) || 0 },
+    mp2()  { return parseInt(this.prop.max_mp    ) || 0 },
+    mp3()  { return parseInt(this.prop.limit_mp  ) || 0 },
+    wx1()  { return parseInt(this.prop.int       ) || 0 },
+    wx2()  { return parseInt(this.prop.int_add   ) || 0 },
+    xxxl() { return parseInt(this.prop.study_per ) || 0 },
+    lxxl() { return parseInt(this.prop.lianxi_per) || 0 },
   },
   watch: {
     documentTitle(value) {
@@ -363,21 +380,27 @@ library_Valkyrie.once('login', function(data) {
   const u = getCookie('u')
   const p = getCookie('p')
   const s = getCookie('s')
+  /* 当创建新角色首次进入游戏时 roles[id] 为空 */
+  if (this.roles[id] === undefined) {
+    this.roles[id] = Object()
+  }
   this.roles[id].cookie = { u, p, s }
   this.roles[id].server = ['一区', '二区', '三区', '四区', '测试'][s]
   console.log(Object.assign(Object(), this.roles))
+  console.log(`Script: ${ GM_info.script.name } ${ GM_info.script.version }`)
+  console.log(`UserAgent: ${ navigator.userAgent }`)
 })
 
 library_Valkyrie.once('login', function(data) {
   this.send(
-    '1000,pack,1000,score2,1000,score,1000',
-    () => document.querySelector('[command=skills]').click(), 1000,
-    () => document.querySelector('[command=tasks]').click(), 1000,
+    'pack,score2,score',
+    () => document.querySelector('[command=skills]').click(),
+    () => document.querySelector('[command=tasks]').click(),
     () => {
       if (document.querySelector('.right-bar').offsetWidth === 0) {
         document.querySelector('[command=showtool]').click()
       }
-    }, 1000,
+    },
     () => {
       if (document.querySelector('.content-bottom').offsetHeight === 0) {
         document.querySelector('[command=showcombat]').click()
@@ -422,10 +445,151 @@ library_Valkyrie.on('die', function(data) {
   this.state = data.relive ? '' : '死亡'
 })
 
+;// CONCATENATED MODULE: ./source/handler/type/room.js
+
+
+library_Valkyrie.on('room', function(data) {
+  let { name, path, desc, commands } = data
+  /**
+   * 新手教程中的椅子
+   * desc: "房子中间有个桌子，几张<cmd cmd='look yizi'><hig>椅子</hig></cmd>。"
+   * name: "新手-训练室"
+   * path: "new/new1"
+   */
+  if (path === 'new/new1') {
+    desc = desc.replace(`<cmd cmd='look yizi'><hig>椅子</hig></cmd>`, `<cmd cmd='look yizi,zuo2 yizi'>椅子</cmd>`)
+  }
+  /**
+   * 兵营副本中的门
+   * name: "兵营-兵营(副本区域)"
+   * path: "yz/by/bingying"
+   * desc: "南边有一个<CMD cmd='look men'>门(men)<CMD>。"
+   */
+  if (path === 'yz/by/bingying') {
+    desc = desc.replace(`<CMD cmd='look men'>门(men)<CMD>`, `<cmd cmd="look men,open men">门</cmd>`)
+  }
+  /**
+   * 古墓副本 画 古琴
+   * name: "古墓派-卧室(副本区域)"
+   * path: "gumu/woshi"
+   * desc: "<cmd cmd='look chuang'>石床</cmd> <span cmd='look hua'>画</span>"
+   *
+   * name: "古墓派-琴室(副本区域)"
+   * path: "gumu/qinshi"
+   * desc: "<span cmd='look qin'>古琴</span>"
+   */
+  if (path === 'gumu/woshi' || path === 'gumu/qinshi') {
+    desc = desc
+      .replace(`<cmd cmd='look chuang'>石床</cmd>`, `<cmd cmd="look chuang,zuo chuang">石床</cmd>`)
+      .replace(`<span cmd='look hua'>画</span>`, `<cmd cmd="look hua">画</cmd>`)
+      .replace(`<span cmd='look qin'>古琴</span>`, `<cmd cmd="look qin,tan qin">古琴</cmd>`)
+  }
+  if (/cmd/.test(desc)) {
+    console.log(desc)
+    /* 统一用双引号 删除英文单词 */
+    desc = desc.replace(/'/g, '"').replace(/\([A-Za-z]+?\)/g, '')
+
+    const htmls = desc.match(/<cmd cmd="[^"]+?">[^<]+?<\/cmd>/g)
+    htmls && htmls.forEach(html => {
+      if (/<cmd cmd="([^"]+?)">([^<]+?)<\/cmd>/.test(html)) {
+        commands.unshift({ cmd: RegExp.$1, name: `<hig>${ RegExp.$2 }</hig>` })
+      }
+    })
+  }
+
+  this.room = { name, path, desc, commands }
+  data.desc = desc
+  data.commands = commands
+})
+
+
+
+;// CONCATENATED MODULE: ./source/handler/type/exits.js
+
+
+library_Valkyrie.on('exits', function(data) {
+  /* 初始化 */
+  if (!this.room.exits) this.room.exits = Object()
+  /* 清空 */
+  Object.keys(this.room.exits).forEach(key => delete this.room.exits[key])
+  /* 赋值 */
+  if (typeof data.items !== 'object') return
+  Object.keys(data.items).forEach(key => {
+    const dir = key
+    const name = data.items[dir]
+    const command = `go ${dir}`
+    this.room.exits[name] = { dir, command }
+  })
+})
+
+;// CONCATENATED MODULE: ./source/library/RoomItem.js
+class RoomItem {
+  constructor(data) {
+    this.id = data.id
+    this.name = data.name
+    this.hp = data.hp || 0
+    this.mp = data.mp || 0
+    this.max_hp = data.max_hp || 0
+    this.max_mp = data.max_mp || 0
+
+    this.status = data.status || Array()
+    this.p = data.p || 0
+    this.isSelf = data.isSelf
+  }
+  get isPlayer() {
+    return this.p === 1
+  }
+  get isOffline() {
+    return this.name.includes('<red>&lt;断线中&gt;</red>')
+  }
+  get isNpc() {
+    return !this.isPlayer
+  }
+  get index() {
+    return this.isSelf ? 0
+         : this.isNpc ? (this.color + 100)
+         : this.isOffline ? (this.color + 300) : (this.color + 200)
+  }
+  get color() {
+    const regexps = [/^<hir>/i, /^<hio>/i, /^<hiz>/i, /^<hic>/i, /^<hiy>/i, /^<hig>/i, /^<wht>/i, /\S/]
+    return regexps.findIndex(regexp => regexp.test(this.name)) + 1
+  }
+}
+
+/* harmony default export */ const library_RoomItem = (RoomItem);
+
+;// CONCATENATED MODULE: ./source/handler/type/items.js
+
+
+
+library_Valkyrie.on('items', function(data) {
+  if (!this.room.items) this.room.items = Array()
+  this.room.items.splice(0)
+
+  const list = Array()
+  if (data.items && data.items instanceof Array) {
+    data.items.forEach(item => {
+      if (item === 0 || typeof item !== 'object') return
+      item.isSelf = item.id === this.id
+      list.push(new library_RoomItem(item))
+    })
+  }
+  list.sort((a, b) => a.index - b.index)
+  data.items = list
+  this.room.items.push(...list)
+})
+
 ;// CONCATENATED MODULE: ./source/index.js
 
 
-initUnsafeWindowTimeWorker()
+
+
+
+
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
   const url = GM_info.script.icon
@@ -442,12 +606,6 @@ GM_registerMenuCommand('GreasyFork Index', function() {
 GM_registerMenuCommand('Github Repo', function() {
   window.open('https://github.com/coderzhaoziwei/legend-of-valkyrie')
 })
-
-;
-
-
-
-
 
 /******/ })()
 ;

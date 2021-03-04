@@ -9,7 +9,6 @@ fs.writeFileSync('./bundle/header.js', `// ==UserScript==
 // @modified     ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString('en-DE')}
 // @license      MIT
 // @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/legend-of-valkyrie/source/image/wakuang.png#12.7kb
-// @homepage     https://greasyfork.org/scripts/422519-legend-of-valkyrie
 // @supportURL   https://github.com/coderzhaoziwei/legend-of-valkyrie/issues
 // @updateURL    https://github.com/coderzhaoziwei/legend-of-valkyrie/raw/main/bundle/valkyrie.min.user.js
 // @match        http://*.wsmud.com/*
@@ -17,7 +16,6 @@ fs.writeFileSync('./bundle/header.js', `// ==UserScript==
 // @exclude      http://*.wsmud.com/pay*
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js
-// @require      https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_setValue
@@ -27,6 +25,4 @@ fs.writeFileSync('./bundle/header.js', `// ==UserScript==
 // @grant        GM_setClipboard
 // @grant        GM_notification
 // @grant        GM_registerMenuCommand
-// ==/UserScript==
-
-`)
+// ==/UserScript==`)

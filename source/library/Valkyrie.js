@@ -6,6 +6,8 @@ const Valkyrie = new Vue({
     roles: Object(),
     id: String(),
     state: String(),
+    room: Object(),
+    prop: Object(),
   },
   computed: {
     role() {
@@ -21,9 +23,28 @@ const Valkyrie = new Vue({
     server() {
       return this.role ? this.role.server : GM_info.script.version
     },
-    documentTitle() { /* 网页标题同步角色状态 */
+    /* 网页标题同步角色状态 */
+    documentTitle() {
       return `${this.name} ${this.state} ${this.server}`.trim()
     },
+    npcs() {
+      const list = Array()
+      if (this.room.items instanceof Array) {
+        this.room.items.forEach(item => item.isNpc && list.push(item))
+      }
+      return list
+    },
+    jy()   { return parseInt(this.prop.exp       ) || 0 },
+    qn()   { return parseInt(this.prop.pot       ) || 0 },
+    hp1()  { return parseInt(this.prop.hp        ) || 0 },
+    hp2()  { return parseInt(this.prop.max_mp    ) || 0 },
+    mp1()  { return parseInt(this.prop.mp        ) || 0 },
+    mp2()  { return parseInt(this.prop.max_mp    ) || 0 },
+    mp3()  { return parseInt(this.prop.limit_mp  ) || 0 },
+    wx1()  { return parseInt(this.prop.int       ) || 0 },
+    wx2()  { return parseInt(this.prop.int_add   ) || 0 },
+    xxxl() { return parseInt(this.prop.study_per ) || 0 },
+    lxxl() { return parseInt(this.prop.lianxi_per) || 0 },
   },
   watch: {
     documentTitle(value) {

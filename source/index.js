@@ -1,6 +1,16 @@
-import { initUnsafeWindowTimeWorker } from './library/TimeWorker'
+import './library/TimeWorker'
 
-initUnsafeWindowTimeWorker()
+import './handler/type/roles'
+import './handler/type/login'
+import './handler/type/state'
+import './handler/type/combat'
+import './handler/type/die'
+import './handler/type/room'
+import './handler/type/exits'
+import './handler/type/items'
+import './handler/type/itemadd'
+import './handler/type/itemremove'
+import './handler/type/score'
 
 document.addEventListener('DOMContentLoaded', function() {
   const url = GM_info.script.icon
@@ -17,9 +27,3 @@ GM_registerMenuCommand('GreasyFork Index', function() {
 GM_registerMenuCommand('Github Repo', function() {
   window.open('https://github.com/coderzhaoziwei/legend-of-valkyrie')
 })
-
-import './handler/type/roles'
-import './handler/type/login'
-import './handler/type/state'
-import './handler/type/combat'
-import './handler/type/die'

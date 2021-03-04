@@ -48,12 +48,7 @@ class TimeWorker {
   }
 }
 
-export default TimeWorker
-
-export const initUnsafeWindowTimeWorker = function() {
-  const timeWorker = new TimeWorker()
-  unsafeWindow.setTimeout = timeWorker.setTimeout.bind(timeWorker)
-  unsafeWindow.setInterval = timeWorker.setInterval.bind(timeWorker)
-  unsafeWindow.clearTimeout = timeWorker.clearTimeout.bind(timeWorker)
-  unsafeWindow.clearInterval = timeWorker.clearInterval.bind(timeWorker)
-}
+/* 替换全局的四个时间方法 */
+const worker = new TimeWorker()
+const fns = ['setTimeout', 'setInterval', 'clearTimeout', 'clearInterval']
+fns.forEach(fn => unsafeWindow[fn] = worker[fn].bind(worker))
