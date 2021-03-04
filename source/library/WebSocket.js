@@ -5,7 +5,7 @@ class WebSocket {
   constructor() {
     this.ws = undefined
     this.wsOnMessage = undefined
-    this.sender = new Sender()
+    this.sender = undefined
     this.eventEmitter = new EventEmitter()
     this.init()
   }
@@ -20,8 +20,6 @@ class WebSocket {
         set onopen(fn) {
           console.log('WebSocket: set onopen')
           self.ws.onopen = fn
-          /* 初始化指令发送 */
-          self.sender.send = self.ws.send
         },
         set onclose(fn) {
           console.log('WebSocket: set onclose')
@@ -61,12 +59,15 @@ class WebSocket {
     if (this.ws && this.wsOnMessage) this.wsOnMessage(event)
   }
   onSend(...args) {
+    if (this.sender === undefined) {
+      this.sender = new Sender(command => this.ws.send(command))
+    }
     args.forEach((item, index) => {
       if (typeof item === 'string' && /^(?!setting)/.test(item) && /,/.test(item)) {
         args[index] = item.split(',')
       }
     })
-    this.sender.push(args.flat(Infinity))
+    this.sender.send(...args.flat(Infinity))
   }
 }
 
@@ -74,15 +75,17 @@ export default WebSocket
 
 function event2data(event) {
   const data = event.data
-  if (data[0] === '{')
+  if (data[0] === '{') {
     return new Function(`return ${ data };`)()
-  else
+  } else {
     return { 'type': 'text', 'text': data }
+  }
 }
 
 function data2event(data) {
-  if (data.type === 'text' && typeof data.text === 'string')
+  if (data.type === 'text' && typeof data.text === 'string') {
     return { data: data.text }
-  else
+  } else {
     return { data: JSON.stringify(data) }
+  }
 }

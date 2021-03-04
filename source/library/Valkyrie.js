@@ -40,8 +40,8 @@ const Valkyrie = new Vue({
     off(id) {
       this.websocket.eventEmitter.off(id)
     },
-    send(command) {
-      this.websocket.onSend(command)
+    send(...args) {
+      this.websocket.onSend(...args)
     },
     wait(ms) {
       return new Promise(_ => setTimeout(() => _(), ms))

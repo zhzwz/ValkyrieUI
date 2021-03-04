@@ -67,45 +67,61 @@ const initUnsafeWindowTimeWorker = function() {
 
 ;// CONCATENATED MODULE: ./source/library/Sender.js
 class Sender {
-  constructor() {
-    this.queue = []
-    this.active = false
-    this.action = undefined
+  constructor(handler) {
+    this.readystate = Boolean()
+    this.queue = Array()
+    this.handler = handler
   }
-  push(args) {
+  send(...args) {
     this.queue.push(...args)
-    if (this.active === false) {
-      this.active = true
+    if (this.readystate === false) {
+      this.readystate = true
       this.loop()
     }
   }
-  loop() {
-    const cmd = this.queue.splice(0, 1)[0]
+  async loop(ms = 256) {
+    const command = this.queue.splice(0, 1)[0]
 
-    if (!this.active) {
+    if (this.readystate === false) {
       return
-    } else if (!cmd) {
-      this.active = false
-      return
-    } else if (!this.action) {
-      console.log('Sender has been destroyed.')
-      this.active = false
+    } else if (this.handler === undefined) {
+      console.log('Sender handler has been destroyed.')
       this.queue.splice(0)
-      return
-    } else if (!isNaN(Number(cmd))) {
-      console.log(`Sender will wait for ${ cmd }ms.`)
-      setTimeout(() => this.loop(), Number(cmd))
-      return
-    } else if (typeof cmd === 'string') {
-      console.log(`"${ cmd }"`)
+      this.readystate = false
+    } else if (command === undefined) {
+      this.readystate = false
+    } else if (isValidNumber(command)) {
+      ms = Number(command)
+      this.loop(ms)
+    } else {
+      await new Promise(resolve => setTimeout(() => resolve(), ms))
+      if (isValidString(command)) {
+        console.log(command)
+        this.handler(command)
+      } else if (isValidFunction(command)) {
+        command()
+      }
+      this.loop()
     }
-
-    this.action(cmd)
-    setTimeout(() => this.loop(), 256)
   }
 }
 
 /* harmony default export */ const library_Sender = (Sender);
+
+function isValidNumber(any) {
+  const element = Number(any)
+  const isNumber = typeof element === 'number'
+  const isNotNaN = isNaN(element) === false
+  return isNumber && isNotNaN
+}
+function isValidString(any) {
+  const isString = typeof any === 'string'
+  const nonEmpty = any !== ''
+  return isString && nonEmpty
+}
+function isValidFunction(any) {
+  return typeof any === 'function'
+}
 
 ;// CONCATENATED MODULE: ./source/library/EventEmitter.js
 class EventEmitter {
@@ -156,7 +172,7 @@ class WebSocket {
   constructor() {
     this.ws = undefined
     this.wsOnMessage = undefined
-    this.sender = new library_Sender()
+    this.sender = undefined
     this.eventEmitter = new library_EventEmitter()
     this.init()
   }
@@ -171,8 +187,6 @@ class WebSocket {
         set onopen(fn) {
           console.log('WebSocket: set onopen')
           self.ws.onopen = fn
-          /* 初始化指令发送 */
-          self.sender.send = self.ws.send
         },
         set onclose(fn) {
           console.log('WebSocket: set onclose')
@@ -212,12 +226,15 @@ class WebSocket {
     if (this.ws && this.wsOnMessage) this.wsOnMessage(event)
   }
   onSend(...args) {
+    if (this.sender === undefined) {
+      this.sender = new library_Sender(command => this.ws.send(command))
+    }
     args.forEach((item, index) => {
       if (typeof item === 'string' && /^(?!setting)/.test(item) && /,/.test(item)) {
         args[index] = item.split(',')
       }
     })
-    this.sender.push(args.flat(Infinity))
+    this.sender.send(...args.flat(Infinity))
   }
 }
 
@@ -225,17 +242,19 @@ class WebSocket {
 
 function event2data(event) {
   const data = event.data
-  if (data[0] === '{')
+  if (data[0] === '{') {
     return new Function(`return ${ data };`)()
-  else
+  } else {
     return { 'type': 'text', 'text': data }
+  }
 }
 
 function data2event(data) {
-  if (data.type === 'text' && typeof data.text === 'string')
+  if (data.type === 'text' && typeof data.text === 'string') {
     return { data: data.text }
-  else
+  } else {
     return { data: JSON.stringify(data) }
+  }
 }
 
 ;// CONCATENATED MODULE: ./source/library/Valkyrie.js
@@ -281,8 +300,8 @@ const Valkyrie = new Vue({
     off(id) {
       this.websocket.eventEmitter.off(id)
     },
-    send(command) {
-      this.websocket.onSend(command)
+    send(...args) {
+      this.websocket.onSend(...args)
     },
     wait(ms) {
       return new Promise(_ => setTimeout(() => _(), ms))
@@ -350,32 +369,27 @@ library_Valkyrie.once('login', function(data) {
 })
 
 library_Valkyrie.once('login', function(data) {
-  this.send('greet master')
-  document.querySelector('[command=skills]').click()
+  this.send(
+    '1000,pack,1000,score2,1000,score,1000',
+    () => document.querySelector('[command=skills]').click(), 1000,
+    () => document.querySelector('[command=tasks]').click(), 1000,
+    () => {
+      if (document.querySelector('.right-bar').offsetWidth === 0) {
+        document.querySelector('[command=showtool]').click()
+      }
+    }, 1000,
+    () => {
+      if (document.querySelector('.content-bottom').offsetHeight === 0) {
+        document.querySelector('[command=showcombat]').click()
+      }
+    },
+    () => document.querySelector('.dialog-close').click(),
+  )
 })
 
 library_Valkyrie.on('login', function(data) {
   if (data.id) this.id = data.id
 })
-
-/**
- * // this.send(["greet master", "pack", "score2", "score"]);//自动请安师傅
-
-  // await this.wait(256)
-  $('[command=skills]').click()
-  // document.querySelector('[command=skills]').click()
-
-  // await this.wait(256)
-  // $('[command=tasks]').click()
-  // if (!unsafeWindow.WG) {
-  //   await this.wait(256)
-  //   $('[command=showtool]').click()
-  //   await this.wait(256)
-  //   $('[command=showcombat]').click()
-  // }
-  // await this.wait(256)
-  // $('.dialog-close').click()
- */
 
 ;// CONCATENATED MODULE: ./source/handler/type/state.js
 

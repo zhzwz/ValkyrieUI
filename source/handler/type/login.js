@@ -12,29 +12,24 @@ Valkyrie.once('login', function(data) {
 })
 
 Valkyrie.once('login', function(data) {
-  this.send('greet master')
-  document.querySelector('[command=skills]').click()
+  this.send(
+    '1000,pack,1000,score2,1000,score,1000',
+    () => document.querySelector('[command=skills]').click(), 1000,
+    () => document.querySelector('[command=tasks]').click(), 1000,
+    () => {
+      if (document.querySelector('.right-bar').offsetWidth === 0) {
+        document.querySelector('[command=showtool]').click()
+      }
+    }, 1000,
+    () => {
+      if (document.querySelector('.content-bottom').offsetHeight === 0) {
+        document.querySelector('[command=showcombat]').click()
+      }
+    },
+    () => document.querySelector('.dialog-close').click(),
+  )
 })
 
 Valkyrie.on('login', function(data) {
   if (data.id) this.id = data.id
 })
-
-/**
- * // this.send(["greet master", "pack", "score2", "score"]);//自动请安师傅
-
-  // await this.wait(256)
-  $('[command=skills]').click()
-  // document.querySelector('[command=skills]').click()
-
-  // await this.wait(256)
-  // $('[command=tasks]').click()
-  // if (!unsafeWindow.WG) {
-  //   await this.wait(256)
-  //   $('[command=showtool]').click()
-  //   await this.wait(256)
-  //   $('[command=showcombat]').click()
-  // }
-  // await this.wait(256)
-  // $('.dialog-close').click()
- */

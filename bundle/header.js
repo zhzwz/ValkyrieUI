@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Legend of Valkyrie
 // @namespace    com.coderzhaoziwei.valkyrie
-// @version      0.0.86
+// @version      0.0.98
 // @author       Coder Zhao
 // @description  《武神传说》浏览器脚本程序 | Valkyrie
-// @modified     2021/3/4 00:03:47
+// @modified     2021/3/4 12:06:26
 // @license      MIT
 // @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/legend-of-valkyrie/source/image/wakuang.png#12.7kb
 // @homepage     https://greasyfork.org/scripts/422519-legend-of-valkyrie
