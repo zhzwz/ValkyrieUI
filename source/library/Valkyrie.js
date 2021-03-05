@@ -8,6 +8,15 @@ const Valkyrie = new Vue({
     state: String(),
     room: Object(),
     prop: Object(),
+
+    packList: Array(),
+    packCount: Number(),
+    packLimit: Number(),
+    packMoney: Number(),
+    equipList: Array(),
+    skillList: Array(),
+    skillLimit: Number(),
+
   },
   computed: {
     role() {
@@ -45,6 +54,15 @@ const Valkyrie = new Vue({
     wx2()  { return parseInt(this.prop.int_add   ) || 0 },
     xxxl() { return parseInt(this.prop.study_per ) || 0 },
     lxxl() { return parseInt(this.prop.lianxi_per) || 0 },
+
+    /* 练习每一跳消耗＝(先天悟性＋后天悟性)×(1＋练习效率%－先天悟性%) */
+    lxCost() {
+      return parseInt((this.wx1 + this.wx2) * (1 + this.lxxl / 100 - this.wx1 / 100))
+    },
+    /* 学习每一跳消耗＝(先天悟性＋后天悟性)×(1＋学习效率%－先天悟性%)×3 */
+    xxCost() {
+      return parseInt((this.wx1 + this.wx2) * (1 + this.xxxl / 100 - this.wx1 / 100) * 3)
+    },
   },
   watch: {
     documentTitle(value) {
@@ -64,8 +82,15 @@ const Valkyrie = new Vue({
     send(...args) {
       this.websocket.onSend(...args)
     },
-    wait(ms) {
-      return new Promise(_ => setTimeout(() => _(), ms))
+    // wait(ms) {
+    //   return new Promise(_ => setTimeout(() => _(), ms))
+    // },
+
+    onData(data) {
+      this.websocket.onData(data)
+    },
+    onText(text) {
+      this.onData({ type: 'text', text})
     },
   },
 })
