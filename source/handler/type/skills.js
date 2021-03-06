@@ -66,9 +66,7 @@ Valkyrie.on('skills', function(data) {
 
 // if (data.hasOwnProperty('exp')) {
 //   // const qn = (Math.pow(this.skillLimit, 2) - Math.pow(skill.level, 2)) * k // 需要的总潜能
-
 //   if (this.state === '练习') {
-
 //   } else if (this.state === '学习') {
 //     // 学习每一跳的消耗公式＝（先天悟性＋后天悟性）×（1＋学习效率%－先天悟性%）× 3
 //     const cost = (this.wx1 + this.wx2) * (1 + this.xxxl / 100 - this.wx1 / 100) * 3

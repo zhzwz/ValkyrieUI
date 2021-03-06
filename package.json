@@ -1,6 +1,6 @@
 {
   "name": "legend-of-valkyrie",
-  "version": "0.0.129",
+  "version": "0.0.137",
   "description": "《武神传说》的浏览器脚本程序，需要配合浏览器插件 Tampermonkey 使用。",
   "author": "Coder Zhao <coderzhaoziwei@outlook.com>",
   "repository": "https://github.com/coderzhaoziwei/legend-of-valkyrie.git",
@@ -10,9 +10,9 @@
     "yarn:init": "yarn",
     "yarn:version": "yarn version --no-git-tag-version --patch",
     "yarn:webpack": "webpack",
-    "node:header": "node source/node/header.js",
-    "node:merge": "node source/node/merge.js",
-    "build": "yarn yarn:version && yarn node:header && yarn yarn:webpack && yarn node:merge"
+    "script:header": "node script/header.js",
+    "script:merge": "node script/merge.js",
+    "build": "yarn yarn:version && yarn script:header && yarn yarn:webpack && yarn script:merge"
   },
   "dependencies": {
     "webpack": "^5.23.0",

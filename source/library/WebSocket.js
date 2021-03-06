@@ -32,7 +32,7 @@ class WebSocket {
         set onmessage(fn) {
           console.log('WebSocket: set onmessage')
           self.wsOnMessage = fn
-          self.ws.onmessage = event =>  self.onMessage(event)
+          self.ws.onmessage = event => self.onMessage(event)
         },
         get readyState() {
           const state = self.ws.readyState
@@ -53,7 +53,7 @@ class WebSocket {
   }
   onData(data) {
     console.log(data)
-    this.eventEmitter.emit(data.type, data)
+    this.eventEmitter.emit(data.dialog || data.type, data)
 
     const event = data2event(data)
     if (this.ws && this.wsOnMessage) this.wsOnMessage(event)

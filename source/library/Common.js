@@ -30,3 +30,11 @@ export const getColorIndexWithName = function(name) {
   }
   return index + 1
 }
+
+
+
+export const createDivById = function(id) {
+  const element = document.createElement('div')
+  element.setAttribute('id', id)
+  return element
+}

@@ -15,7 +15,8 @@ fs.writeFileSync('./bundle/header.js', `// ==UserScript==
 // @exclude      http://*.wsmud.com/news*
 // @exclude      http://*.wsmud.com/pay*
 // @run-at       document-start
-// @require      https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js
+// @require      https://greasyfork.org/scripts/422783/code/ValkyrieWorker.js
+// @require      https://github.com/coderzhaoziwei/legend-of-valkyrie/raw/main/source/package/vue.3.0.7.js
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_setValue

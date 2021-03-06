@@ -1,6 +1,6 @@
 import WebSocket from './WebSocket'
 
-const Valkyrie = new Vue({
+export const app = Vue.createApp({
   data: {
     websocket: new WebSocket(),
     roles: Object(),
@@ -95,6 +95,9 @@ const Valkyrie = new Vue({
   },
 })
 
-export default Valkyrie
+const Valkyrie = app.mount('#valkyrie')
+unsafeWindow.Valkyrie = Valkyrie
 
 unsafeWindow.Valkyrie = Valkyrie
+
+export default Valkyrie
