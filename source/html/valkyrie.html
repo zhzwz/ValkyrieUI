@@ -1,0 +1,32 @@
+<teleport to="#valkyrie-left">
+  <div v-show="id" class="v-channel">
+    <div v-for="item in channels" :class="['v-channel-item', id===item.id ? 'v-channel-self' : '']">
+      <div class="v-channel-title">
+        <span v-if="item.isSelf===true"  class="v-channel-time" v-text="item.timeText"></span>
+        <span class="v-channel-name" v-html="`<${item.tag}>【${item.titleText}】${item.name}</${item.tag}>`"></span>
+        <span v-if="item.isSelf===false" class="v-channel-time" v-text="item.timeText"></span>
+      </div>
+      <div class="v-channel-content" v-html="`<${item.tag}>${item.content}</${item.tag}>`"></div>
+    </div>
+    <div class="v-channel-scroll"></div>
+  </div>
+</teleport>
+
+<teleport to="#valkyrie-right">
+  <header>Valkyrie</header>
+
+  <!-- <el-card v-show="id" class="box-card">
+    <template v-slot:header>
+      <div class="clearfix">
+        <span>{{name}}</span>
+        <el-button style="float: right; padding: 3px 0" type="text"
+          >切换账号</el-button
+        >
+      </div>
+    </template>
+    <div v-for="o in 4" :key="o" class="text item">{{'列表内容 ' + o }}</div>
+  </el-card>
+
+  <el-button v-show="id">默认按钮</el-button> -->
+
+</teleport>
