@@ -1,0 +1,59 @@
+<teleport to=".v-sidebar-right">
+  <div class="v-sidebar-inner" v-show="showSidebarRight">
+    <!-- header -->
+    <div class="v-header">
+      <span class="v-font-cursive v-unselectable">聊天频道</span>
+      <el-tooltip class="item" effect="dark" content="显示内容筛选" placement="bottom">
+        <i class="el-icon-more-outline v-cursor-pointer" @click="showChannelOptions = !showChannelOptions"></i>
+      </el-tooltip>
+    </div>
+    <!-- options -->
+    <el-collapse-transition>
+      <div v-show="showChannelOptions" class="v-channel-options">
+        <div class="v-channel-options-title">显示选中频道的内容</div>
+        <el-checkbox v-model="options.showChannelCh" label="世界"></el-checkbox>
+        <el-checkbox v-model="options.showChannelTm" label="队伍"></el-checkbox>
+        <el-checkbox v-model="options.showChannelFa" label="门派"></el-checkbox>
+        <el-checkbox v-model="options.showChannelPt" label="帮会"></el-checkbox>
+        <el-checkbox v-model="options.showChannelEs" label="全区"></el-checkbox>
+        <el-checkbox v-model="options.showChannelRu" label="谣言"></el-checkbox>
+        <el-checkbox v-model="options.showChannelSy" label="系统"></el-checkbox>
+        <!-- <div class="v-channel-options-title">你的聊天发送至频道</div>
+        <el-select v-model="channelValue">
+          <el-option v-for="item in channelSelections" :key="item.value" :label="item.name" :value="item.value"></el-option>
+        </el-select> -->
+      </div>
+    </el-collapse-transition>
+    <!-- list -->
+    <div class="v-channel-list">
+      <div v-for="item in channels" :class="['v-channel-item', id===item.id ? 'v-channel-self' : '']">
+        <div class="v-channel-title v-unselectable">
+          <span v-if="item.isSelf===true"  class="v-channel-time" v-text="item.timeText"></span>
+          <span
+            class="v-channel-name v-cursor-pointer"
+            v-html="`<${item.tag}>【${item.titleText}】${item.name}</${item.tag}>`"
+            @click="sendCommands(`look3 ${item.id},look3 body of ${item.id}`)"
+          ></span>
+          <span v-if="item.isSelf===false" class="v-channel-time" v-text="item.timeText"></span>
+        </div>
+        <div class="v-channel-content" v-html="`<${item.tag}>${item.content}</${item.tag}>`"></div>
+      </div>
+      <div class="v-channel-scroll"></div>
+    </div>
+    <!-- select -->
+    <el-select class="v-channel-select" v-model="channelValue">
+      <el-option v-for="item in channelSelections" :key="item.value" :label="item.name" :value="item.value"></el-option>
+    </el-select>
+    <!-- input -->
+    <div class="v-channel-input">
+      <el-input
+        type="textarea"
+        v-model="chatValue"
+        v-on:keyup.enter="sendChatValue()"
+        :rows="2" resize="none"
+        maxlength="200" show-word-limit
+      ></el-input>
+      <i class="el-icon-s-promotion v-unselectable v-cursor-pointer" style="width: 2em; text-align: center;" @click="sendChatValue()"></i>
+    </div>
+  </div>
+</teleport>

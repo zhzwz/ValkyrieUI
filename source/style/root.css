@@ -1,0 +1,107 @@
+/* 16 32 64 96 128 192 256 */
+:root {
+  --bg: #202020;
+  --bg-dark: #181818;
+  --bg-darker: #101010;
+
+  --text: rgb(216, 216, 216);
+  --text-dark: #a8a8a8;
+  --text-darker: #888888;
+
+  --el-color-white: rgb(216, 216, 216);
+  --el-color-black: rgb(128, 128, 128);
+  --el-color-green: rgb(  0, 128,  64);
+
+  --el-bgcolor-dark-1: rgba(128, 128, 128, 0.75);
+  --el-bgcolor-dark-2: rgba( 64,  64,  64, 0.75);
+  --el-bgcolor-dark-3: rgba( 32,  32,  32, 0.75);
+}
+
+::selection {
+  color: rgb(0,160,0);
+  background-color: rgb(0,40,0);
+}
+::-moz-selection {
+  color: rgb(0,160,0);
+  background-color: rgb(0,40,0);
+}
+
+.v-font-cursive {
+  font-family: 'Ma Shan Zheng', cursive;
+}
+.v-cursor-pointer {
+  cursor: pointer;
+}
+.v-unselectable {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+.login-content {
+  order: 2;
+  flex: 1 0 auto;
+  width: 768px;
+}
+.login-content .content {
+  background-color: rgba(64, 64, 64, 0.25);
+}
+.login-content .panel_item {
+  color: rgb(216, 216, 216);
+  border-color: rgba(64, 64, 64) !important;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.login-content .panel_item:not(.active):hover {
+  color: rgb(216, 216, 216);
+  background-color: rgba(0, 128, 64, 0.25);
+}
+.login-content .bottom {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.login-content iframe {
+  background-color: rgb(216, 216, 216);
+}
+.login-content .signinfo, .login-content .signinfo a {
+  color: rgb(216, 216, 216);
+}
+
+
+.container {
+  order: 2;
+  margin: 0;
+  width: 360px;
+  flex: 1 0 auto;
+  font-size: 1em !important;
+  /* border-left: #a8a8a8; */
+  border-left: 4px solid rgba(64, 64, 64, 0.5);
+  border-right: 4px solid rgba(64, 64, 64, 0.5);
+}
+
+
+
+.room_desc {
+  font-size: 0.75em;
+  text-indent: 2em;
+  line-height: 1.5em;
+}
+.room_exits {
+  display: flex;
+  justify-content: center; /* 居中 */
+}
+
+.room_exits > svg > rect,
+.room_exits > svg > text {
+  cursor: pointer;
+}
+

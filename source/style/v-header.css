@@ -1,0 +1,15 @@
+.v-header {
+  padding: 0 0.5em;
+  font-size: 1.25em;
+  line-height: 1.75em;
+  height: 1.75em !important;
+
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+
+  color: rgb(216, 216, 216) !important;
+  background-color: rgba(32, 32, 32, 0.75) !important;
+}

@@ -1,0 +1,27 @@
+<teleport to=".v-sidebar-left">
+  <div class="v-sidebar-inner" v-show="showSidebarLeft">
+    <!-- header -->
+    <div class="v-header">
+      <div>
+        <span class="v-font-cursive" v-text="name"></span>
+        <i v-if="genderValue===0" style="padding-left: 0.5em;" class="el-icon-female"></i>
+        <i v-if="genderValue===1" style="padding-left: 0.5em;" class="el-icon-male"></i>
+      </div>
+
+
+      <i class="el-icon-menu"></i>
+    </div>
+    <!-- score -->
+    <div class="v-score">
+      <div class="v-score-row">
+        <div class="v-score-title v-font">经验</div>
+        <div class="v-score-value">{{Number(jy.toFixed()).toLocaleString()}}</div>
+      </div>
+      <div class="v-score-row">
+        <div class="v-score-title v-font">潜能</div>
+        <div class="v-score-value">{{Number(qn.toFixed()).toLocaleString()}}</div>
+      </div>
+    </div>
+
+  </div>
+</teleport>

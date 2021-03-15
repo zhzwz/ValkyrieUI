@@ -1,0 +1,26 @@
+.v-sidebar {
+  margin: 0;
+  flex: 0 0 auto;
+  color: var(--text);
+}
+
+.v-sidebar-left {
+  order: 1;
+  /* width: 300px; */
+}
+
+.v-sidebar-right {
+  order: 3;
+  /* width: 300px; */
+}
+
+.v-sidebar > .v-sidebar-inner {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-y: scroll;
+  flex-direction: column;
+
+  height: 100%;
+  width: 300px;
+  position: relative;
+}

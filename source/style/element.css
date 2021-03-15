@@ -1,0 +1,101 @@
+.el-popper[x-placement^=top] .popper__arrow,
+.el-popper[x-placement^=top] .popper__arrow::after {
+  border-top-color: rgba(64, 64, 64, 0.9);
+}
+.el-popper[x-placement^=bottom] .popper__arrow,
+.el-popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: rgba(64, 64, 64, 0.9);
+}
+
+
+
+
+
+
+/* checkbox */
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: var(--el-color-green);
+}
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  border-color: var(--el-color-green);
+  background-color: var(--el-color-green);
+}
+.el-checkbox__label {
+  font-size: 0.75em;
+  padding-left: 1em;
+  line-height: 1.5em;
+}
+
+/* tooltip */
+.el-tooltip__popper.is-dark {
+  color: var(--el-color-white);
+  background: var(--el-bgcolor-dark-3);
+}
+.el-tooltip__popper[x-placement^=bottom] .popper__arrow,
+.el-tooltip__popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: var(--el-bgcolor-dark-2);
+}
+
+
+
+
+
+/* input */
+.el-input__inner {
+  height: 24px;
+  font-size: 12px;
+  line-height: 24px;
+  color: rgb(216, 216, 216);
+  /* border-color: rgb(0, 128, 64); */
+  border-color: rgba(64, 64, 64);
+  background-color: rgba(64, 64, 64, 0.75);
+}
+.el-input__icon {
+  width: 24px;
+  line-height: 24px;
+}
+.el-textarea__inner {
+  color: rgb(216, 216, 216);
+  border-color: rgba(64, 64, 64, 0.75);
+  background-color: rgba(64, 64, 64, 0.75);
+}
+.el-textarea__inner:hover,
+.el-textarea__inner:focus {
+  border-color: rgba(0, 128, 64, 0.75);
+}
+
+
+/* select */
+.el-select-dropdown {
+  border: none;
+  background-color: rgba(64, 64, 64, 0.9);
+}
+
+.el-select-dropdown__item {
+  height: 2em;
+  font-size: 0.75em;
+  line-height: 2em;
+  color: rgb(216, 216, 216);
+}
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: rgba(0, 128, 64, 0.25);
+}
+.el-select-dropdown__item.selected {
+  font-weight: normal;
+  color: rgb(0, 128, 64);
+}
+.el-select .el-input__inner:focus {
+  border-color: rgb(0, 128, 64);
+}
+
+
+
+
+
+
+
+
+
+

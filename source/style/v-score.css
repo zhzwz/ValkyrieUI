@@ -1,0 +1,25 @@
+.v-score {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+}
+
+.v-score > .v-score-row {
+  display: flex;
+  flex-direction: row;
+
+  font-size: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+
+}
+.v-score > .v-score-row > .v-score-title {
+  flex: 0 0 auto;
+  padding: 0 1em;
+  text-align: center;
+}
+.v-score > .v-score-row > .v-score-value {
+  flex: 1 0 4em;
+  text-align: left;
+  font-family: monospace;
+}

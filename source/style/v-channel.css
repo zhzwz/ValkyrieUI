@@ -1,0 +1,86 @@
+.v-channel-options {
+  flex: 0 0 auto;
+  padding: 0 0.75em 1em 0.75em;
+  top: 2em;
+  position: absolute;
+  background: rgba(64, 64, 64, 0.95);
+}
+.v-channel-options-title {
+  height: 2em;
+  line-height: 2em;
+  font-size: 0.75em;
+  margin-top: 0.5em;
+}
+.v-channel-options .el-input {
+  width: 6em;
+}
+
+
+
+/* 聊天展示列 */
+.v-channel-list {
+  flex: 1 1 auto;
+  margin: 0.5em 0;
+  overflow-y: auto;
+}
+
+.v-channel-item {
+  display: flex;
+  padding: 0 0.5em;
+  font-size: 0.75em;
+  flex-direction: column;
+}
+
+.v-channel-content {
+  width: fit-content;
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+
+  margin: 0 1.5em 0 0.5em;
+  background-color: rgba(64, 64, 64, 0.5);
+  word-break: break-word;
+}
+
+.v-channel-self > .v-channel-title {
+  align-self: flex-end;
+}
+.v-channel-self > .v-channel-content {
+  align-self: flex-end;
+  margin: 0 0.5em 0 1.5em;
+  background-color: rgba(96, 96, 96, 0.5);
+}
+
+.v-channel-time {
+  padding: 0 0.25em;
+  color: #404040;
+  font-family: monospace;
+}
+
+
+/* 频道选择器 */
+.v-channel-select {
+  width: 4.5em;
+  margin-left: 0.5em;
+}
+.v-channel-select .el-input__inner {
+  border-bottom-left-radius: unset;
+  border-bottom-right-radius: unset;
+  border-bottom-color: transparent;
+  background-color: rgba(32, 32, 32, 0.5);
+}
+
+/* 发言输入框 */
+.v-channel-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 0 0.5em 0.5em;
+}
+.v-channel-input textarea {
+  font-size: 0.75em;
+  border-top-left-radius: unset;
+  background-color: rgba(32, 32, 32, 0.5);
+}
+.v-channel-input .el-input__count {
+  background-color: rgba(0,0,0,0);
+}
