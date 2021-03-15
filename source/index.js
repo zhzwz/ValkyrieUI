@@ -1,24 +1,26 @@
+import './init'
 import app from './app'
-import { addStyleByURL, on } from './common'
-import { addStyle, appendElement } from './common'
-import ValkyrieHTML from './html/valkyrie.html'
-import MainCSS from './style/main.css'
-import ChannelCSS from './style/channel.css'
 
-/* 初始化 CSS */
-addStyleByURL('https://cdn.jsdelivr.net/npm/element3@0.0.39/lib/theme-chalk/index.css')
-addStyle(MainCSS)
-addStyle(ChannelCSS)
-/* 初始化 HTML */
-appendElement(document.body, 'div', { id: 'valkyrie' })
-appendElement(document.body, 'div', { class: 'valkyrie-sidebar', id: 'valkyrie-left' })
-appendElement(document.body, 'div', { class: 'valkyrie-sidebar', id: 'valkyrie-right' })
+const v = app.mount('.valkyrie')
 
+valkyrie.on('login', async function(data) {
+  await this.wait(256)
 
-document.querySelector('#valkyrie').innerHTML = ValkyrieHTML
+}.bind(valkyrie))
 
-/* 挂载 */
-const valkyrie = app.use(Element3).mount('#valkyrie')
-
-/* 监听 */
-on('login', data => (valkyrie.id = data.id))
+/* this.send(
+    'pack,score2,score',
+    () => document.querySelector('[command=skills]').click(),
+    () => document.querySelector('[command=tasks]').click(),
+    () => {
+      if (document.querySelector('.right-bar').offsetWidth === 0) {
+        document.querySelector('[command=showtool]').click()
+      }
+    },
+    () => {
+      if (document.querySelector('.content-bottom').offsetHeight === 0) {
+        document.querySelector('[command=showcombat]').click()
+      }
+    },
+    () => document.querySelector('.dialog-close').click(),
+  ) */

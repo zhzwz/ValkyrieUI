@@ -13,10 +13,16 @@ const metadata = `// ==UserScript==
 // @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/ValkyrieWorker/source/image/wakuang.png
 // @supportURL   https://github.com/coderzhaoziwei/Valkyrie/issues
 // @match        http://*.wsmud.com/*
-// @exclude      http://*.wsmud.com/news*
 // @exclude      http://*.wsmud.com/pay*
+// @exclude      http://*.wsmud.com/dist*
+// @exclude      http://*.wsmud.com/news*
 // @license      MIT
 // ==/UserScript==
+
+/* eslint-env es6 */
+/* global common:readonly gsap:readonly */
+/* global Vue:readonly Element3:readonly */
+/* global ValkyrieWorker:readonly  Valkyrie:readonly */
 `
 
 export default {
@@ -30,9 +36,8 @@ export default {
     cleanup(),
     string({
       include: [
-        'source/html/valkyrie.html',
-        'source/style/main.css',
-        'source/style/channel.css',
+        'source/html/*.html',
+        'source/style/*.css',
       ],
     }),
     clear({
