@@ -5,8 +5,7 @@ const app = Vue.createApp({
       showLeft: false,
       showRight: false,
 
-      jy: 0,
-      qn: 0,
+      jy: 0, qn: 0,
 
       options: {
         activeTitle: true,
@@ -30,6 +29,8 @@ const app = Vue.createApp({
         { name: '门派', value: 'fam' },
         { name: '全区', value: 'es' },
       ],
+
+      showRoomMapDialog: false,
     }
   },
   computed: {
@@ -69,14 +70,20 @@ const app = Vue.createApp({
       return this.channels.length
     },
 
-
-
     room() {
       return Valkyrie.room
     },
     roomName() {
       return `${this.room.x} ${this.room.y}`
     },
+    map() {
+      return Valkyrie.map
+    },
+    // mapSVG() {
+    //   return Valkyrie.map.svg
+    // },
+
+
     score() {
       return Valkyrie.score
     },
@@ -89,9 +96,15 @@ const app = Vue.createApp({
     genderValue() {
       return ['女', '男'].findIndex(item => item === this.score.gender) // 0=女 1=男 -1
     },
+    hpPercentage() {
+      return parseInt((this.score.hp / this.score.max_hp) * 100) || 0
+    },
+    mpPercentage() {
+      return parseInt((this.score.mp / this.score.max_mp) * 100) || 0
+    },
 
     isNotMobile() {
-      return this.widthValue >= 768
+      return this.widthValue > 768
     },
     showSidebarLeft() {
       return this.id && (this.isNotMobile || this.showLeft)
@@ -122,14 +135,6 @@ const app = Vue.createApp({
     sendCommands(...args) {
       ValkyrieWorker.sendCommands(...args)
     },
-    sendChatValue() {
-      const value = this.chatValue.trim()
-      if (value) this.sendCommand(`${this.channelValue} ${value}`)
-      this.chatValue = ''
-    },
-
-
-
 
     on(type, handler) {
       return ValkyrieWorker.on(type, handler)
@@ -140,12 +145,38 @@ const app = Vue.createApp({
     off(id) {
       ValkyrieWorker.off(id)
     },
+    wait(ms = 256) {
+      return new Promise(resolve => setTimeout(() => resolve(), ms))
+    },
+
+    clickMapIcon() {
+      this.showRoomMapDialog = !this.showRoomMapDialog
+      if (this.showRoomMapDialog) this.sendCommand(`map`)
+    },
+    clickChatIcon() {
+      const value = this.chatValue.trim()
+      if (value) this.sendCommand(`${this.channelValue} ${value}`)
+      this.chatValue = ''
+    },
+    async openToolBar() {
+      if (document.querySelector('.content-bottom').offsetHeight === 0) {
+        document.querySelector('[command=showcombat]').click()
+      }
+      if (document.querySelector('.right-bar').offsetWidth === 0) {
+        document.querySelector('[command=showtool]').click()
+      }
+      await this.wait(1000)
+      document.querySelector('.right-bar').style.bottom =
+        document.querySelector('.content-bottom').clientHeight +
+        document.querySelector('.tool-bar.bottom-bar').clientHeight + 'px'
+    },
   },
 
   mounted() {
     const updateWidth = () => (this.widthValue = document.body.clientWidth)
-    window.onresize = function() {
+    window.onresize = () => {
       updateWidth()
+      this.openToolBar()
     }
     updateWidth()
   },

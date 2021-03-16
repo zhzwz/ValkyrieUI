@@ -8,18 +8,45 @@
   display: flex;
   flex-direction: row;
 
-  font-size: 1.5em;
+  font-size: 1.25em;
   height: 1.5em;
   line-height: 1.5em;
-
 }
 .v-score > .v-score-row > .v-score-title {
   flex: 0 0 auto;
-  padding: 0 1em;
+  padding: 0 0.5em;
   text-align: center;
 }
 .v-score > .v-score-row > .v-score-value {
-  flex: 1 0 4em;
+  flex: 0 0 auto;
+  width: 9em;
   text-align: left;
   font-family: monospace;
+}
+
+
+.v-percentage .el-progress-bar__outer {
+  background-color: rgba(128, 128, 128, 0.5);
+  border-radius: 0.25em;
+}
+.v-percentage .el-progress-bar__inner {
+  border-radius: 0.25em;
+}
+.v-percentage .el-progress-bar__innerText {
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.v-percentage.v-percentage-hp .el-progress-bar__inner {
+  background-color: rgba(255, 0, 0, 0.5);
+}
+.v-percentage.v-percentage-mp .el-progress-bar__inner {
+  background-color: rgba(0, 0, 255, 0.5);
+}
+.v-percentage.v-percentage-hp .el-progress-bar__innerText::before {
+  content: '气血 ';
+}
+.v-percentage.v-percentage-mp .el-progress-bar__innerText::before {
+  content: '内力 ';
 }

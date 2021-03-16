@@ -2,7 +2,7 @@
   <div class="v-sidebar-inner" v-show="showSidebarRight">
     <!-- header -->
     <div class="v-header">
-      <span class="v-font-cursive v-unselectable">聊天频道</span>
+      <span class="v-font v-unselectable">聊天频道</span>
       <el-tooltip class="item" effect="dark" content="显示内容筛选" placement="bottom">
         <i class="el-icon-more-outline v-cursor-pointer" @click="showChannelOptions = !showChannelOptions"></i>
       </el-tooltip>
@@ -49,11 +49,11 @@
       <el-input
         type="textarea"
         v-model="chatValue"
-        v-on:keyup.enter="sendChatValue()"
+        v-on:keyup.enter="clickChatIcon()"
         :rows="2" resize="none"
         maxlength="200" show-word-limit
       ></el-input>
-      <i class="el-icon-s-promotion v-unselectable v-cursor-pointer" style="width: 2em; text-align: center;" @click="sendChatValue()"></i>
+      <i class="el-icon-s-promotion v-unselectable v-cursor-pointer" style="width: 2em; text-align: center;" @click="clickChatIcon()"></i>
     </div>
   </div>
 </teleport>

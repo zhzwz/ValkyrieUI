@@ -26,6 +26,8 @@ appendElement(body, 'div', { class: 'v-sidebar v-sidebar-right' })
 setAttribute('.room-title', { class: 'v-room-title v-header', innerHTML: '' })
 setAttribute('li.panel_item.active', { class: 'panel_item active v-header v-font' })
 setAttribute('.room_exits', { class: 'room_exits v-unselectable' })
+// setAttribute('.content-bottom', { class: 'content-bottom v-unselectable' })
+
 
 const ValkyrieHTML = LeftHTML + RightHTML + RoomTitleHTML
 setAttribute('.valkyrie', { innerHTML: ValkyrieHTML })

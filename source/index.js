@@ -1,26 +1,20 @@
 import './init'
 import app from './app'
 
-const v = app.mount('.valkyrie')
+const valkyrie = app.mount('.valkyrie')
 
 valkyrie.on('login', async function(data) {
-  await this.wait(256)
+  valkyrie.sendCommands('pack,score2,score')
+  await valkyrie.wait(1000)
+  document.querySelector('[command=skills]').click()
+  await valkyrie.wait(1000)
+  document.querySelector('[command=tasks]').click()
+  await valkyrie.wait(1000)
+  document.querySelector('.dialog-close').click()
+  valkyrie.openToolBar()
+})
 
-}.bind(valkyrie))
-
-/* this.send(
-    'pack,score2,score',
-    () => document.querySelector('[command=skills]').click(),
-    () => document.querySelector('[command=tasks]').click(),
-    () => {
-      if (document.querySelector('.right-bar').offsetWidth === 0) {
-        document.querySelector('[command=showtool]').click()
-      }
-    },
-    () => {
-      if (document.querySelector('.content-bottom').offsetHeight === 0) {
-        document.querySelector('[command=showcombat]').click()
-      }
-    },
-    () => document.querySelector('.dialog-close').click(),
-  ) */
+// 替换状态文本
+valkyrie.on('state', data => data.state && (data.state = valkyrie.stateText))
+// 销毁地图数据
+valkyrie.on('map', data => delete data.type)

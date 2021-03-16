@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Valkyrie
 // @namespace    https://greasyfork.org/scripts/422519-valkyrie
-// @version      0.0.354
+// @version      0.0.430
 // @author       Coder Zhao <coderzhaoziwei@outlook.com>
-// @modified     2021/3/15 14:14:48
+// @modified     2021/3/16 17:29:40
 // @description  文字游戏《武神传说》的浏览器脚本程序 | 界面拓展 | 功能增强
 // @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/ValkyrieWorker/source/image/wakuang.png
 // @supportURL   https://github.com/coderzhaoziwei/Valkyrie/issues
@@ -22,27 +22,27 @@
 (function () {
   'use strict';
 
-  var rootCSS = "/* 16 32 64 96 128 192 256 */\n:root {\n  --bg: #202020;\n  --bg-dark: #181818;\n  --bg-darker: #101010;\n\n  --text: rgb(216, 216, 216);\n  --text-dark: #a8a8a8;\n  --text-darker: #888888;\n\n  --el-color-white: rgb(216, 216, 216);\n  --el-color-black: rgb(128, 128, 128);\n  --el-color-green: rgb(  0, 128,  64);\n\n  --el-bgcolor-dark-1: rgba(128, 128, 128, 0.75);\n  --el-bgcolor-dark-2: rgba( 64,  64,  64, 0.75);\n  --el-bgcolor-dark-3: rgba( 32,  32,  32, 0.75);\n}\n\n::selection {\n  color: rgb(0,160,0);\n  background-color: rgb(0,40,0);\n}\n::-moz-selection {\n  color: rgb(0,160,0);\n  background-color: rgb(0,40,0);\n}\n\n.v-font-cursive {\n  font-family: 'Ma Shan Zheng', cursive;\n}\n.v-cursor-pointer {\n  cursor: pointer;\n}\n.v-unselectable {\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\nbody {\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  font-family: \"Helvetica Neue\", Helvetica, \"PingFang SC\",\n    \"Hiragino Sans GB\", \"Microsoft YaHei\", \"微软雅黑\", Arial, sans-serif;\n  background-color: rgba(0, 0, 0, 0.75) !important;\n}\n\n.login-content {\n  order: 2;\n  flex: 1 0 auto;\n  width: 768px;\n}\n.login-content .content {\n  background-color: rgba(64, 64, 64, 0.25);\n}\n.login-content .panel_item {\n  color: rgb(216, 216, 216);\n  border-color: rgba(64, 64, 64) !important;\n  background-color: rgba(0, 0, 0, 0.5);\n}\n.login-content .panel_item:not(.active):hover {\n  color: rgb(216, 216, 216);\n  background-color: rgba(0, 128, 64, 0.25);\n}\n.login-content .bottom {\n  background-color: rgba(0, 0, 0, 0.5);\n}\n.login-content iframe {\n  background-color: rgb(216, 216, 216);\n}\n.login-content .signinfo, .login-content .signinfo a {\n  color: rgb(216, 216, 216);\n}\n\n\n.container {\n  order: 2;\n  margin: 0;\n  width: 360px;\n  flex: 1 0 auto;\n  font-size: 1em !important;\n  /* border-left: #a8a8a8; */\n  border-left: 4px solid rgba(64, 64, 64, 0.5);\n  border-right: 4px solid rgba(64, 64, 64, 0.5);\n}\n\n\n\n.room_desc {\n  font-size: 0.75em;\n  text-indent: 2em;\n  line-height: 1.5em;\n}\n.room_exits {\n  display: flex;\n  justify-content: center; /* 居中 */\n}\n\n.room_exits > svg > rect,\n.room_exits > svg > text {\n  cursor: pointer;\n}\n\n";
+  var rootCSS = "/* 16 32 64 96 128 192 256 */\n:root {\n  --bg: #202020;\n  --bg-dark: #181818;\n  --bg-darker: #101010;\n\n  --text: rgb(216, 216, 216);\n  --text-dark: #a8a8a8;\n  --text-darker: #888888;\n\n  --el-color-white: rgb(216, 216, 216);\n  --el-color-black: rgb(128, 128, 128);\n  --el-color-green: rgb(  0, 128,  64);\n\n  --el-bgcolor-dark-1: rgba(128, 128, 128, 0.75);\n  --el-bgcolor-dark-2: rgba( 64,  64,  64, 0.75);\n  --el-bgcolor-dark-3: rgba( 32,  32,  32, 0.75);\n}\n\n::selection {\n  color: rgb(0,160,0);\n  background-color: rgb(0,40,0);\n}\n::-moz-selection {\n  color: rgb(0,160,0);\n  background-color: rgb(0,40,0);\n}\n\n.v-font-cursive {\n  font-family: 'Ma Shan Zheng', cursive;\n}\n.v-cursor-pointer {\n  cursor: pointer;\n}\n\n\n.v-unselectable, .tool-bar, .content-bottom {\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\nbody {\n  width: 100%;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  justify-content: center;\n\n  font-family: \"Helvetica Neue\", Helvetica, \"PingFang SC\",\n    \"Hiragino Sans GB\", \"Microsoft YaHei\", \"微软雅黑\", Arial, sans-serif;\n  background-color: rgba(0, 0, 0, 0.75) !important;\n}\n\n.login-content, .container {\n  order: 2;\n  flex: 1 1 auto;\n  width: 16em;\n  max-width: 768px;\n  font-size: 1em !important;\n  margin: 0;\n  border-left: 4px solid rgba(64, 64, 64, 0.5);\n  border-right: 4px solid rgba(64, 64, 64, 0.5);\n}\n.channel {\n  display: none;\n  font-size: 0.75em;\n}\n@media screen and (max-width: 768px) {\n  .login-content, .container {\n    flex: 1 0 auto;\n    width: 100%;\n    border: none !important;\n  }\n  .channel {\n    display: block;\n  }\n}\n\n\n.login-content .content {\n  background-color: rgba(64, 64, 64, 0.25);\n}\n.login-content .panel_item {\n  color: rgb(216, 216, 216);\n  border-color: rgba(64, 64, 64) !important;\n  background-color: rgba(0, 0, 0, 0.5);\n}\n.login-content .panel_item:not(.active):hover {\n  color: rgb(216, 216, 216);\n  background-color: rgba(0, 128, 64, 0.25);\n}\n.login-content .bottom {\n  background-color: rgba(0, 0, 0, 0.5);\n}\n.login-content iframe {\n  background-color: rgb(216, 216, 216);\n}\n.login-content .signinfo, .login-content .signinfo a {\n  color: rgb(216, 216, 216);\n}\n\n.room_desc {\n  font-size: 0.75em;\n  text-indent: 2em;\n  line-height: 1.5em;\n}\n.room_exits {\n  display: flex;\n  justify-content: center; /* 居中 */\n}\n\n.room_exits > svg > rect,\n.room_exits > svg > text {\n  cursor: pointer;\n}\n\n\n.v-room-title .el-dialog__wrapper {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.v-room-title .el-dialog {\n  margin: unset !important;\n  background-color: rgba(32, 32, 32, 0.9);\n}\n.v-room-title .el-dialog__title {\n  color: rgb(216, 216, 216);\n  font-size: 1em;\n  font-family: 'Ma Shan Zheng', cursive;\n}\n.v-room-title .v-room-map {\n  width: 100%;\n  height: 100%;\n}\n.v-room-title svg {\n  cursor: grabbing;\n}\n.v-room-title .el-dialog__body {\n  padding: 0 !important;\n}\n.v-room-title .el-dialog__body {\n  display: flex;\n  justify-content: center;\n}\n\n\n\n.content-bottom {\n  font-size: 0.75em;\n}\n\n.room-commands,\n.combat-commands {\n  position: relative;\n  white-space: pre-wrap;\n  padding-left: 1em;\n}\n.room-commands::before,\n.combat-commands::before {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  height: 100%;\n  color: rgb(216, 216, 216);\n  border-color: rgba(64, 64, 64);\n  background-color: rgba(0, 0, 0, 0.5);\n}\n/* .combat-commands::before {\n\n  background-color: #232323;\n  color: gray;\n  display: inline-block;\n  border-bottom-right-radius: 0.25em;\n} */\n\n.room-commands > .act-item,\n.combat-commands > .pfm-item {\n  min-width: 1em;\n  margin: 0 0 0.25em 0.5em;\n  padding: 0.25em 0.5em;\n\n  color: rgb(216, 216, 216);\n  border-color: rgba(64, 64, 64);\n  background-color: rgba(0, 0, 0, 0.5);\n}\n\n\n.tool-bar > .tool-item {\n  font-size: 0.75em;\n  height: 3em;\n  width: 3em;\n  margin: 0 0.25em 0.25em 0;\n\n  color: rgba(255, 255, 255, 0.5);\n  border-color: rgba(64, 64, 64);\n  background-color: rgba(0, 0, 0, 0.5);\n}\n.tool-bar > .tool-item > span.tool-icon {\n  line-height: 1.25em;\n}\n.tool-bar > .tool-item > span.tool-text {\n  line-height: 1.5em;\n  font-weight: bold;\n  font-weight: normal;\n}\n\n.tool-bar.right-bar {\n  right: 0px;\n}\n.tool-item[command=\"showtool\"] {\n  line-height: 3em;\n}\n\n\n.state-bar > .title {\n  font-size: 0.75em;\n  line-height: 3em;\n  padding-left: 1em;\n}\n";
 
   var elementCSS = ".el-popper[x-placement^=top] .popper__arrow,\n.el-popper[x-placement^=top] .popper__arrow::after {\n  border-top-color: rgba(64, 64, 64, 0.9);\n}\n.el-popper[x-placement^=bottom] .popper__arrow,\n.el-popper[x-placement^=bottom] .popper__arrow::after {\n  border-bottom-color: rgba(64, 64, 64, 0.9);\n}\n\n\n\n\n\n\n/* checkbox */\n.el-checkbox__input.is-checked + .el-checkbox__label {\n  color: var(--el-color-green);\n}\n.el-checkbox__input.is-checked .el-checkbox__inner,\n.el-checkbox__input.is-indeterminate .el-checkbox__inner {\n  border-color: var(--el-color-green);\n  background-color: var(--el-color-green);\n}\n.el-checkbox__label {\n  font-size: 0.75em;\n  padding-left: 1em;\n  line-height: 1.5em;\n}\n\n/* tooltip */\n.el-tooltip__popper.is-dark {\n  color: var(--el-color-white);\n  background: var(--el-bgcolor-dark-3);\n}\n.el-tooltip__popper[x-placement^=bottom] .popper__arrow,\n.el-tooltip__popper[x-placement^=bottom] .popper__arrow::after {\n  border-bottom-color: var(--el-bgcolor-dark-2);\n}\n\n\n\n\n\n/* input */\n.el-input__inner {\n  height: 24px;\n  font-size: 12px;\n  line-height: 24px;\n  color: rgb(216, 216, 216);\n  /* border-color: rgb(0, 128, 64); */\n  border-color: rgba(64, 64, 64);\n  background-color: rgba(64, 64, 64, 0.75);\n}\n.el-input__icon {\n  width: 24px;\n  line-height: 24px;\n}\n.el-textarea__inner {\n  color: rgb(216, 216, 216);\n  border-color: rgba(64, 64, 64, 0.75);\n  background-color: rgba(64, 64, 64, 0.75);\n}\n.el-textarea__inner:hover,\n.el-textarea__inner:focus {\n  border-color: rgba(0, 128, 64, 0.75);\n}\n\n\n/* select */\n.el-select-dropdown {\n  border: none;\n  background-color: rgba(64, 64, 64, 0.9);\n}\n\n.el-select-dropdown__item {\n  height: 2em;\n  font-size: 0.75em;\n  line-height: 2em;\n  color: rgb(216, 216, 216);\n}\n.el-select-dropdown__item.hover,\n.el-select-dropdown__item:hover {\n  background-color: rgba(0, 128, 64, 0.25);\n}\n.el-select-dropdown__item.selected {\n  font-weight: normal;\n  color: rgb(0, 128, 64);\n}\n.el-select .el-input__inner:focus {\n  border-color: rgb(0, 128, 64);\n}\n\n\n\n\n\n\n\n\n\n\n";
 
-  var fontCSS = ".v-font {\n  font-family: 'Ma Shan Zheng', cursive;\n}\n";
+  var fontCSS = ".v-font {\n  font-family: 'Ma Shan Zheng', cursive !important;\n}\n";
 
-  var scoreCSS = ".v-score {\n  display: flex;\n  flex-direction: column;\n  padding: 0.5em;\n}\n\n.v-score > .v-score-row {\n  display: flex;\n  flex-direction: row;\n\n  font-size: 1.5em;\n  height: 1.5em;\n  line-height: 1.5em;\n\n}\n.v-score > .v-score-row > .v-score-title {\n  flex: 0 0 auto;\n  padding: 0 1em;\n  text-align: center;\n}\n.v-score > .v-score-row > .v-score-value {\n  flex: 1 0 4em;\n  text-align: left;\n  font-family: monospace;\n}\n";
+  var scoreCSS = ".v-score {\n  display: flex;\n  flex-direction: column;\n  padding: 0.5em;\n}\n\n.v-score > .v-score-row {\n  display: flex;\n  flex-direction: row;\n\n  font-size: 1.25em;\n  height: 1.5em;\n  line-height: 1.5em;\n}\n.v-score > .v-score-row > .v-score-title {\n  flex: 0 0 auto;\n  padding: 0 0.5em;\n  text-align: center;\n}\n.v-score > .v-score-row > .v-score-value {\n  flex: 0 0 auto;\n  width: 9em;\n  text-align: left;\n  font-family: monospace;\n}\n\n\n.v-percentage .el-progress-bar__outer {\n  background-color: rgba(128, 128, 128, 0.5);\n  border-radius: 0.25em;\n}\n.v-percentage .el-progress-bar__inner {\n  border-radius: 0.25em;\n}\n.v-percentage .el-progress-bar__innerText {\n  display: flex;\n  justify-content: space-between;\n  overflow: hidden;\n}\n\n.v-percentage.v-percentage-hp .el-progress-bar__inner {\n  background-color: rgba(255, 0, 0, 0.5);\n}\n.v-percentage.v-percentage-mp .el-progress-bar__inner {\n  background-color: rgba(0, 0, 255, 0.5);\n}\n.v-percentage.v-percentage-hp .el-progress-bar__innerText::before {\n  content: '气血 ';\n}\n.v-percentage.v-percentage-mp .el-progress-bar__innerText::before {\n  content: '内力 ';\n}\n";
 
   var headerCSS = ".v-header {\n  padding: 0 0.5em;\n  font-size: 1.25em;\n  line-height: 1.75em;\n  height: 1.75em !important;\n\n  display: flex;\n  flex-wrap: nowrap;\n  align-items: center;\n  flex-direction: row;\n  justify-content: space-between;\n\n  color: rgb(216, 216, 216) !important;\n  background-color: rgba(32, 32, 32, 0.75) !important;\n}\n";
 
-  var sidebarCSS = ".v-sidebar {\n  margin: 0;\n  flex: 0 0 auto;\n  color: var(--text);\n}\n\n.v-sidebar-left {\n  order: 1;\n  /* width: 300px; */\n}\n\n.v-sidebar-right {\n  order: 3;\n  /* width: 300px; */\n}\n\n.v-sidebar > .v-sidebar-inner {\n  display: flex;\n  flex-wrap: nowrap;\n  overflow-y: scroll;\n  flex-direction: column;\n\n  height: 100%;\n  width: 300px;\n  position: relative;\n}\n";
+  var sidebarCSS = ".v-sidebar {\n  margin: 0;\n  flex: 0 1 auto;\n  color: var(--text);\n  width: 16em;\n}\n\n.v-sidebar-left {\n  order: 1;\n}\n.v-sidebar-right {\n  order: 3;\n}\n\n.v-sidebar > .v-sidebar-inner {\n  display: flex;\n  flex-wrap: nowrap;\n  overflow-y: scroll;\n  flex-direction: column;\n\n  height: 100%;\n\n  position: relative;\n}\n";
 
-  var channelCSS = ".v-channel-options {\n  flex: 0 0 auto;\n  padding: 0 0.75em 1em 0.75em;\n  top: 2em;\n  position: absolute;\n  background: rgba(64, 64, 64, 0.75);\n}\n.v-channel-options-title {\n  height: 2em;\n  line-height: 2em;\n  font-size: 0.75em;\n  margin-top: 0.5em;\n}\n.v-channel-options .el-input {\n  width: 6em;\n}\n\n\n\n/* 聊天展示列 */\n.v-channel-list {\n  flex: 1 1 auto;\n  margin: 0.5em 0;\n  overflow-y: auto;\n}\n\n.v-channel-item {\n  display: flex;\n  padding: 0 0.5em;\n  font-size: 0.75em;\n  flex-direction: column;\n}\n\n.v-channel-content {\n  width: fit-content;\n  padding: 0.25em 0.5em;\n  border-radius: 0.25em;\n\n  margin: 0 1.5em 0 0.5em;\n  background-color: rgba(64, 64, 64, 0.5);\n  word-break: break-word;\n}\n\n.v-channel-self > .v-channel-title {\n  align-self: flex-end;\n}\n.v-channel-self > .v-channel-content {\n  align-self: flex-end;\n  margin: 0 0.5em 0 1.5em;\n  background-color: rgba(96, 96, 96, 0.5);\n}\n\n.v-channel-time {\n  padding: 0 0.25em;\n  color: #404040;\n  font-family: monospace;\n}\n\n\n/* 频道选择器 */\n.v-channel-select {\n  width: 4.5em;\n  margin-left: 0.5em;\n}\n.v-channel-select .el-input__inner {\n  border-bottom-left-radius: unset;\n  border-bottom-right-radius: unset;\n  border-bottom-color: transparent;\n  background-color: rgba(32, 32, 32, 0.5);\n}\n\n/* 发言输入框 */\n.v-channel-input {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  padding: 0 0 0.5em 0.5em;\n}\n.v-channel-input textarea {\n  font-size: 0.75em;\n  border-top-left-radius: unset;\n  background-color: rgba(32, 32, 32, 0.5);\n}\n.v-channel-input .el-input__count {\n  background-color: rgba(0,0,0,0);\n}\n";
+  var channelCSS = ".v-channel-options {\n  flex: 0 0 auto;\n  padding: 0 0.75em 1em 0.75em;\n  top: 2em;\n  position: absolute;\n  background: rgba(64, 64, 64, 0.95);\n}\n.v-channel-options-title {\n  height: 2em;\n  line-height: 2em;\n  font-size: 0.75em;\n  margin-top: 0.5em;\n}\n.v-channel-options .el-input {\n  width: 6em;\n}\n\n\n\n/* 聊天展示列 */\n.v-channel-list {\n  flex: 1 1 auto;\n  margin: 0.5em 0;\n  overflow-y: auto;\n}\n\n.v-channel-item {\n  display: flex;\n  padding: 0 0.5em;\n  font-size: 0.75em;\n  flex-direction: column;\n}\n\n.v-channel-content {\n  width: fit-content;\n  padding: 0.25em 0.5em;\n  border-radius: 0.25em;\n\n  margin: 0 1.5em 0 0.5em;\n  background-color: rgba(64, 64, 64, 0.5);\n  word-break: break-word;\n}\n\n.v-channel-self > .v-channel-title {\n  align-self: flex-end;\n}\n.v-channel-self > .v-channel-content {\n  align-self: flex-end;\n  margin: 0 0.5em 0 1.5em;\n  background-color: rgba(96, 96, 96, 0.5);\n}\n\n.v-channel-time {\n  padding: 0 0.25em;\n  color: #404040;\n  font-family: monospace;\n}\n\n\n/* 频道选择器 */\n.v-channel-select {\n  width: 4.5em;\n  margin-left: 0.5em;\n}\n.v-channel-select .el-input__inner {\n  border-bottom-left-radius: unset;\n  border-bottom-right-radius: unset;\n  border-bottom-color: transparent;\n  background-color: rgba(32, 32, 32, 0.5);\n}\n\n/* 发言输入框 */\n.v-channel-input {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  padding: 0 0 0.5em 0.5em;\n}\n.v-channel-input textarea {\n  font-size: 0.75em;\n  border-top-left-radius: unset;\n  background-color: rgba(32, 32, 32, 0.5);\n}\n.v-channel-input .el-input__count {\n  background-color: rgba(0,0,0,0);\n}\n";
 
   var backgroundCSS = ".v-background {\n  width: 100%;\n  height: 100%;\n  z-index: -1;\n  position: absolute;\n  background-color: rgba(64, 64, 64, 1);\n  background-image: url(https://cdn.jsdelivr.net/gh/coderzhaoziwei/Valkyrie@main/source/image/yande%23726730.jpg);\n  background-repeat: no-repeat;\n  background-size: cover;\n}\n";
 
-  var LeftHTML = "<teleport to=\".v-sidebar-left\">\n  <div class=\"v-sidebar-inner\" v-show=\"showSidebarLeft\">\n    <!-- header -->\n    <div class=\"v-header\">\n      <div>\n        <span class=\"v-font-cursive\" v-text=\"name\"></span>\n        <i v-if=\"genderValue===0\" style=\"padding-left: 0.5em;\" class=\"el-icon-female\"></i>\n        <i v-if=\"genderValue===1\" style=\"padding-left: 0.5em;\" class=\"el-icon-male\"></i>\n      </div>\n\n\n      <i class=\"el-icon-menu\"></i>\n    </div>\n    <!-- score -->\n    <div class=\"v-score\">\n      <div class=\"v-score-row\">\n        <div class=\"v-score-title v-font\">经验</div>\n        <div class=\"v-score-value\">{{Number(jy.toFixed()).toLocaleString()}}</div>\n      </div>\n      <div class=\"v-score-row\">\n        <div class=\"v-score-title v-font\">潜能</div>\n        <div class=\"v-score-value\">{{Number(qn.toFixed()).toLocaleString()}}</div>\n      </div>\n    </div>\n\n  </div>\n</teleport>\n";
+  var LeftHTML = "<teleport to=\".v-sidebar-left\">\n  <div class=\"v-sidebar-inner\" v-show=\"showSidebarLeft\">\n    <!-- header -->\n    <div class=\"v-header\">\n      <div>\n        <span class=\"v-font\" v-text=\"name\"></span>\n        <i v-if=\"genderValue===0\" style=\"padding-left: 0.5em;\" class=\"el-icon-female\"></i>\n        <i v-if=\"genderValue===1\" style=\"padding-left: 0.5em;\" class=\"el-icon-male\"></i>\n      </div>\n      <i class=\"el-icon-menu\"></i>\n    </div>\n    <!-- score -->\n    <div class=\"v-score\">\n      <div class=\"v-score-row\">\n        <div class=\"v-score-title v-font\" v-html=\"score.level\"></div>\n        <div class=\"v-score-value v-font\" v-text=\"score.family\"></div>\n      </div>\n      <div class=\"v-score-row\">\n        <div class=\"v-score-title v-font\">经验</div>\n        <div class=\"v-score-value\" v-text=\"Number(jy.toFixed()).toLocaleString()\"></div>\n      </div>\n      <div class=\"v-score-row\">\n        <div class=\"v-score-title v-font\">潜能</div>\n        <div class=\"v-score-value\" v-text=\"Number(qn.toFixed()).toLocaleString()\"></div>\n      </div>\n      <el-progress\n        class=\"v-percentage v-percentage-hp\"\n        :text-inside=\"true\"\n        :stroke-width=\"12\"\n        :percentage=\"hpPercentage\"\n      ></el-progress>\n      <el-progress\n        class=\"v-percentage v-percentage-mp\"\n        :text-inside=\"true\"\n        :stroke-width=\"12\"\n        :percentage=\"mpPercentage\"\n      ></el-progress>\n      <!-- stroke-linecap\tcircle/dashboard 类型路径两端的形状\tstring\tbutt/round/square -->\n    </div>\n\n  </div>\n</teleport>\n";
 
-  var RightHTML = "<teleport to=\".v-sidebar-right\">\n  <div class=\"v-sidebar-inner\" v-show=\"showSidebarRight\">\n    <!-- header -->\n    <div class=\"v-header\">\n      <span class=\"v-font-cursive v-unselectable\">聊天频道</span>\n      <el-tooltip class=\"item\" effect=\"dark\" content=\"显示内容筛选\" placement=\"bottom\">\n        <i class=\"el-icon-more-outline v-cursor-pointer\" @click=\"showChannelOptions = !showChannelOptions\"></i>\n      </el-tooltip>\n    </div>\n    <!-- options -->\n    <el-collapse-transition>\n      <div v-show=\"showChannelOptions\" class=\"v-channel-options\">\n        <div class=\"v-channel-options-title\">显示选中频道的内容</div>\n        <el-checkbox v-model=\"options.showChannelCh\" label=\"世界\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelTm\" label=\"队伍\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelFa\" label=\"门派\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelPt\" label=\"帮会\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelEs\" label=\"全区\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelRu\" label=\"谣言\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelSy\" label=\"系统\"></el-checkbox>\n        <!-- <div class=\"v-channel-options-title\">你的聊天发送至频道</div>\n        <el-select v-model=\"channelValue\">\n          <el-option v-for=\"item in channelSelections\" :key=\"item.value\" :label=\"item.name\" :value=\"item.value\"></el-option>\n        </el-select> -->\n      </div>\n    </el-collapse-transition>\n    <!-- list -->\n    <div class=\"v-channel-list\">\n      <div v-for=\"item in channels\" :class=\"['v-channel-item', id===item.id ? 'v-channel-self' : '']\">\n        <div class=\"v-channel-title v-unselectable\">\n          <span v-if=\"item.isSelf===true\"  class=\"v-channel-time\" v-text=\"item.timeText\"></span>\n          <span\n            class=\"v-channel-name v-cursor-pointer\"\n            v-html=\"`<${item.tag}>【${item.titleText}】${item.name}</${item.tag}>`\"\n            @click=\"sendCommands(`look3 ${item.id},look3 body of ${item.id}`)\"\n          ></span>\n          <span v-if=\"item.isSelf===false\" class=\"v-channel-time\" v-text=\"item.timeText\"></span>\n        </div>\n        <div class=\"v-channel-content\" v-html=\"`<${item.tag}>${item.content}</${item.tag}>`\"></div>\n      </div>\n      <div class=\"v-channel-scroll\"></div>\n    </div>\n    <!-- select -->\n    <el-select class=\"v-channel-select\" v-model=\"channelValue\">\n      <el-option v-for=\"item in channelSelections\" :key=\"item.value\" :label=\"item.name\" :value=\"item.value\"></el-option>\n    </el-select>\n    <!-- input -->\n    <div class=\"v-channel-input\">\n      <el-input\n        type=\"textarea\"\n        v-model=\"chatValue\"\n        v-on:keyup.enter=\"sendChatValue()\"\n        :rows=\"2\" resize=\"none\"\n        maxlength=\"200\" show-word-limit\n      ></el-input>\n      <i class=\"el-icon-s-promotion v-unselectable v-cursor-pointer\" style=\"width: 2em; text-align: center;\" @click=\"sendChatValue()\"></i>\n    </div>\n  </div>\n</teleport>\n";
+  var RightHTML = "<teleport to=\".v-sidebar-right\">\n  <div class=\"v-sidebar-inner\" v-show=\"showSidebarRight\">\n    <!-- header -->\n    <div class=\"v-header\">\n      <span class=\"v-font v-unselectable\">聊天频道</span>\n      <el-tooltip class=\"item\" effect=\"dark\" content=\"显示内容筛选\" placement=\"bottom\">\n        <i class=\"el-icon-more-outline v-cursor-pointer\" @click=\"showChannelOptions = !showChannelOptions\"></i>\n      </el-tooltip>\n    </div>\n    <!-- options -->\n    <el-collapse-transition>\n      <div v-show=\"showChannelOptions\" class=\"v-channel-options\">\n        <div class=\"v-channel-options-title\">显示选中频道的内容</div>\n        <el-checkbox v-model=\"options.showChannelCh\" label=\"世界\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelTm\" label=\"队伍\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelFa\" label=\"门派\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelPt\" label=\"帮会\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelEs\" label=\"全区\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelRu\" label=\"谣言\"></el-checkbox>\n        <el-checkbox v-model=\"options.showChannelSy\" label=\"系统\"></el-checkbox>\n        <!-- <div class=\"v-channel-options-title\">你的聊天发送至频道</div>\n        <el-select v-model=\"channelValue\">\n          <el-option v-for=\"item in channelSelections\" :key=\"item.value\" :label=\"item.name\" :value=\"item.value\"></el-option>\n        </el-select> -->\n      </div>\n    </el-collapse-transition>\n    <!-- list -->\n    <div class=\"v-channel-list\">\n      <div v-for=\"item in channels\" :class=\"['v-channel-item', id===item.id ? 'v-channel-self' : '']\">\n        <div class=\"v-channel-title v-unselectable\">\n          <span v-if=\"item.isSelf===true\"  class=\"v-channel-time\" v-text=\"item.timeText\"></span>\n          <span\n            class=\"v-channel-name v-cursor-pointer\"\n            v-html=\"`<${item.tag}>【${item.titleText}】${item.name}</${item.tag}>`\"\n            @click=\"sendCommands(`look3 ${item.id},look3 body of ${item.id}`)\"\n          ></span>\n          <span v-if=\"item.isSelf===false\" class=\"v-channel-time\" v-text=\"item.timeText\"></span>\n        </div>\n        <div class=\"v-channel-content\" v-html=\"`<${item.tag}>${item.content}</${item.tag}>`\"></div>\n      </div>\n      <div class=\"v-channel-scroll\"></div>\n    </div>\n    <!-- select -->\n    <el-select class=\"v-channel-select\" v-model=\"channelValue\">\n      <el-option v-for=\"item in channelSelections\" :key=\"item.value\" :label=\"item.name\" :value=\"item.value\"></el-option>\n    </el-select>\n    <!-- input -->\n    <div class=\"v-channel-input\">\n      <el-input\n        type=\"textarea\"\n        v-model=\"chatValue\"\n        v-on:keyup.enter=\"clickChatIcon()\"\n        :rows=\"2\" resize=\"none\"\n        maxlength=\"200\" show-word-limit\n      ></el-input>\n      <i class=\"el-icon-s-promotion v-unselectable v-cursor-pointer\" style=\"width: 2em; text-align: center;\" @click=\"clickChatIcon()\"></i>\n    </div>\n  </div>\n</teleport>\n";
 
-  var RoomTitleHTML = "<teleport to=\".v-room-title\">\n  <span class=\"v-room-name v-font-cursive v-unselectable\" v-text=\"roomName\"></span>\n  <i class=\"el-icon-map-location v-cursor-pointer\" @click=\"sendCommand(`map`)\"></i>\n</teleport>\n";
+  var RoomTitleHTML = "<teleport to=\".v-room-title\">\n  <span class=\"v-room-name v-font v-unselectable\" v-text=\"roomName\"></span>\n  <i class=\"el-icon-map-location v-cursor-pointer\" @click=\"clickMapIcon()\"></i>\n\n  <!-- map dialog -->\n  <el-dialog\n    :width=\"`${map.width}px`\"\n    :title=\"roomName\" center destroy-on-close\n    :visible.sync=\"showRoomMapDialog\"\n    v-model:visible=\"showRoomMapDialog\"\n  >\n    <div\n      class=\"v-room-map v-unselectable\"\n      :style=\"`max-width: ${map.width}px; max-height: ${map.height}px;`\"\n      v-html=\"map.svg\"\n    ></div>\n  </el-dialog>\n</teleport>\n";
 
   const head = document.head;
   const body = document.body;
@@ -75,8 +75,7 @@
         widthValue: 0,
         showLeft: false,
         showRight: false,
-        jy: 0,
-        qn: 0,
+        jy: 0, qn: 0,
         options: {
           activeTitle: true,
           showChannelCh: true,
@@ -97,6 +96,7 @@
           { name: '门派', value: 'fam' },
           { name: '全区', value: 'es' },
         ],
+        showRoomMapDialog: false,
       }
     },
     computed: {
@@ -140,6 +140,9 @@
       roomName() {
         return `${this.room.x} ${this.room.y}`
       },
+      map() {
+        return Valkyrie.map
+      },
       score() {
         return Valkyrie.score
       },
@@ -152,8 +155,14 @@
       genderValue() {
         return ['女', '男'].findIndex(item => item === this.score.gender)
       },
+      hpPercentage() {
+        return parseInt((this.score.hp / this.score.max_hp) * 100) || 0
+      },
+      mpPercentage() {
+        return parseInt((this.score.mp / this.score.max_mp) * 100) || 0
+      },
       isNotMobile() {
-        return this.widthValue >= 768
+        return this.widthValue > 768
       },
       showSidebarLeft() {
         return this.id && (this.isNotMobile || this.showLeft)
@@ -184,11 +193,6 @@
       sendCommands(...args) {
         ValkyrieWorker.sendCommands(...args);
       },
-      sendChatValue() {
-        const value = this.chatValue.trim();
-        if (value) this.sendCommand(`${this.channelValue} ${value}`);
-        this.chatValue = '';
-      },
       on(type, handler) {
         return ValkyrieWorker.on(type, handler)
       },
@@ -198,11 +202,36 @@
       off(id) {
         ValkyrieWorker.off(id);
       },
+      wait(ms = 256) {
+        return new Promise(resolve => setTimeout(() => resolve(), ms))
+      },
+      clickMapIcon() {
+        this.showRoomMapDialog = !this.showRoomMapDialog;
+        if (this.showRoomMapDialog) this.sendCommand(`map`);
+      },
+      clickChatIcon() {
+        const value = this.chatValue.trim();
+        if (value) this.sendCommand(`${this.channelValue} ${value}`);
+        this.chatValue = '';
+      },
+      async openToolBar() {
+        if (document.querySelector('.content-bottom').offsetHeight === 0) {
+          document.querySelector('[command=showcombat]').click();
+        }
+        if (document.querySelector('.right-bar').offsetWidth === 0) {
+          document.querySelector('[command=showtool]').click();
+        }
+        await this.wait(1000);
+        document.querySelector('.right-bar').style.bottom =
+          document.querySelector('.content-bottom').clientHeight +
+          document.querySelector('.tool-bar.bottom-bar').clientHeight + 'px';
+      },
     },
     mounted() {
       const updateWidth = () => (this.widthValue = document.body.clientWidth);
-      window.onresize = function() {
+      window.onresize = () => {
         updateWidth();
+        this.openToolBar();
       };
       updateWidth();
     },
@@ -210,6 +239,17 @@
   app.use(Element3);
 
   const valkyrie = app.mount('.valkyrie');
-  valkyrie.on('login', data => (valkyrie.id = data.id));
+  valkyrie.on('login', async function(data) {
+    valkyrie.sendCommands('pack,score2,score');
+    await valkyrie.wait(1000);
+    document.querySelector('[command=skills]').click();
+    await valkyrie.wait(1000);
+    document.querySelector('[command=tasks]').click();
+    await valkyrie.wait(1000);
+    document.querySelector('.dialog-close').click();
+    valkyrie.openToolBar();
+  });
+  valkyrie.on('state', data => data.state && (data.state = valkyrie.stateText));
+  valkyrie.on('map', data => delete data.type);
 
 }());

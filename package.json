@@ -1,6 +1,6 @@
 {
   "name": "Valkyrie",
-  "version": "0.0.354",
+  "version": "0.0.430",
   "author": "Coder Zhao <coderzhaoziwei@outlook.com>",
   "description": "《武神传说》的浏览器脚本程序，需要配合浏览器插件 Tampermonkey 使用。",
   "repository": "https://github.com/coderzhaoziwei/Valkyrie.git",
@@ -9,7 +9,7 @@
     "build": "yarn run:version && yarn run:rollup && yarn run:clipboard",
     "run:version": "yarn version --no-git-tag-version --patch",
     "run:rollup": "yarn rollup --config",
-    "run:clipboard": "pbcopy < bundle/Valkyrie.user.js && echo File content has benn copied to Clipboard.",
+    "run:clipboard": "pbcopy < bundle/Valkyrie.user.js && clear && echo '\u001b[32m文件内容已复制到剪切板！'",
     "run:install": "yarn"
   },
   "devDependencies": {
