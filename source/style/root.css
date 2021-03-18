@@ -50,7 +50,7 @@ body {
 
   font-family: "Helvetica Neue", Helvetica, "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-  background-color: rgba(0, 0, 0, 0.75) !important;
+  background-color: rgba(0, 0, 0, 0.8) !important;
 }
 
 .login-content, .container {
@@ -176,16 +176,7 @@ body {
   border-bottom-right-radius: 0.25em;
 } */
 
-.room-commands > .act-item,
-.combat-commands > .pfm-item {
-  min-width: 1em;
-  margin: 0 0 0.25em 0.5em;
-  padding: 0.25em 0.5em;
 
-  color: rgb(216, 216, 216);
-  border-color: rgba(64, 64, 64);
-  background-color: rgba(0, 0, 0, 0.5);
-}
 
 
 .tool-bar > .tool-item {
@@ -206,7 +197,6 @@ body {
   font-weight: bold;
   font-weight: normal;
 }
-
 .tool-bar.right-bar {
   right: 0px;
 }
@@ -215,8 +205,49 @@ body {
 }
 
 
+
+/* 原游戏角色状态文本 */
 .state-bar > .title {
-  font-size: 0.75em;
+  font-size: 1em;
   line-height: 3em;
   padding-left: 1em;
+}
+
+/* 技能列表的等级数字对齐 */
+.skill-level{font-family:monospace}
+
+/* 原游戏的按钮样式优化 */
+span.span-button,
+div.item-commands > span[cmd],
+div.room-commands > .act-item,
+div.combat-commands > .pfm-item {
+  font-size: 1em;
+  min-width: 1em;
+  line-height: 1.5em;
+  padding: 0 0.5em;
+  margin: 0 0 0.25em 0.5em;
+  border-radius: 0.25em;
+
+  color: rgb(216, 216, 216);
+  border: 1px solid rgba(64, 64, 64);
+  background-color: rgba(0, 0, 0, 0.5);
+
+  cursor: pointer;
+  text-align: center;
+}
+span.span-button:hover,
+div.item-commands > span[cmd]:hover,
+div.room-commands > .act-item:hover,
+div.combat-commands > .pfm-item:hover {
+  color: rgb(216, 216, 216);
+  background-color: rgba(0, 128, 64, 0.25);
+}
+span.span-button:active,
+div.item-commands > span[cmd]:active,
+div.room-commands > .act-item:active,
+div.combat-commands > .pfm-item:active {
+  transform: translateY(1px);
+
+  color: rgb(216, 216, 216);
+  background-color: rgba(0, 128, 64, 0.5);
 }

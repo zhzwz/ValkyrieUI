@@ -7,6 +7,7 @@ import headerCSS from './style/v-header.css'
 import sidebarCSS from './style/v-sidebar.css'
 import channelCSS from './style/v-channel.css'
 import backgroundCSS from './style/v-background.css'
+import valkyrieCSS from './style/valkyrie.css'
 
 import LeftHTML from './html/sidebar-left.html'
 import RightHTML from './html/sidebar-right.html'
@@ -26,8 +27,6 @@ appendElement(body, 'div', { class: 'v-sidebar v-sidebar-right' })
 setAttribute('.room-title', { class: 'v-room-title v-header', innerHTML: '' })
 setAttribute('li.panel_item.active', { class: 'panel_item active v-header v-font' })
 setAttribute('.room_exits', { class: 'room_exits v-unselectable' })
-// setAttribute('.content-bottom', { class: 'content-bottom v-unselectable' })
-
 
 const ValkyrieHTML = LeftHTML + RightHTML + RoomTitleHTML
 setAttribute('.valkyrie', { innerHTML: ValkyrieHTML })
@@ -47,3 +46,4 @@ appendElement(head, 'style', { id: 'style-v-header', innerHTML: headerCSS })
 appendElement(head, 'style', { id: 'style-v-sidebar', innerHTML: sidebarCSS })
 appendElement(head, 'style', { id: 'style-v-channel', innerHTML: channelCSS })
 appendElement(head, 'style', { id: 'style-v-background', innerHTML: backgroundCSS })
+appendElement(head, 'style', { id: 'style-valkyrie', innerHTML: valkyrieCSS })

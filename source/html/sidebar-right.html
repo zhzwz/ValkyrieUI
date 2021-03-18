@@ -26,7 +26,7 @@
     </el-collapse-transition>
     <!-- list -->
     <div class="v-channel-list">
-      <div v-for="item in channels" :class="['v-channel-item', id===item.id ? 'v-channel-self' : '']">
+      <div v-for="item in chatList" :class="['v-channel-item', id===item.id ? 'v-channel-self' : '']">
         <div class="v-channel-title v-unselectable">
           <span v-if="item.isSelf===true"  class="v-channel-time" v-text="item.timeText"></span>
           <span
