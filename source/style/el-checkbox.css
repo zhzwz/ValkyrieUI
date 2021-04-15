@@ -1,0 +1,16 @@
+.el-checkbox {
+  margin-right: 1rem;
+}
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: rgb(0, 128, 64);
+}
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  border-color: rgb(0, 128, 64);
+  background-color: rgb(0, 128, 64);
+}
+.el-checkbox__label {
+  font-size: 0.75rem;
+  padding-left: 1rem;
+  line-height: 1.5rem;
+}

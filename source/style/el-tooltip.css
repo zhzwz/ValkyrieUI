@@ -1,0 +1,8 @@
+.el-tooltip__popper.is-dark {
+  color: rgb(216, 216, 216);
+  background: rgba(32, 32, 32, 0.75);
+}
+.el-tooltip__popper[x-placement^=bottom] .popper__arrow,
+.el-tooltip__popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: rgba( 64,  64,  64, 0.75);
+}

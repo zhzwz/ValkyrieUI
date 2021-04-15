@@ -1,7 +1,7 @@
 .v-sidebar {
   margin: 0;
   flex: 0 1 auto;
-  color: var(--text);
+  color: rgb(216, 216, 216);
   width: 16em;
 }
 

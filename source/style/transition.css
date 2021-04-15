@@ -1,0 +1,13 @@
+.show-panel-enter-active, .show-panel-leave-active {
+  transition: all .5s ease;
+}
+.show-panel-enter-from, .show-panel-leave-to {
+  opacity: 0;
+  margin: 0px;
+  padding: 0px;
+  max-height: 0px;
+}
+.show-panel-enter-to, .show-panel-leave-from {
+  opacity: 1;
+  max-height: 150px;
+}

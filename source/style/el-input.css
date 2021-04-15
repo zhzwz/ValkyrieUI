@@ -1,0 +1,21 @@
+.el-input__inner {
+  height: 1.5rem;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  color: rgb(216, 216, 216);
+  border-color: rgba(64, 64, 64);
+  background-color: rgba(64, 64, 64, 0.75);
+}
+.el-input__icon {
+  width: 1.5rem;
+  line-height: 1.5rem;
+}
+.el-textarea__inner {
+  color: rgb(216, 216, 216);
+  border-color: rgba(64, 64, 64, 0.75);
+  background-color: rgba(64, 64, 64, 0.75);
+}
+.el-textarea__inner:hover,
+.el-textarea__inner:focus {
+  border-color: rgba(0, 128, 64, 0.75);
+}

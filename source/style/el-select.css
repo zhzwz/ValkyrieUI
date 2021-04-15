@@ -1,0 +1,21 @@
+.el-select-dropdown {
+  border: none;
+  background-color: rgba(64, 64, 64, 0.9);
+}
+.el-select-dropdown__item {
+  height: 2em;
+  font-size: 0.75em;
+  line-height: 2em;
+  color: rgb(216, 216, 216);
+}
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: rgba(0, 128, 64, 0.25);
+}
+.el-select-dropdown__item.selected {
+  font-weight: normal;
+  color: rgb(0, 128, 64);
+}
+.el-select .el-input__inner:focus {
+  border-color: rgb(0, 128, 64);
+}

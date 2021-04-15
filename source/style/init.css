@@ -10,16 +10,13 @@
 .yellow-text{color:rgb(250,250,100)}
 
 .unselectable {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 .selectable {
-  -moz-user-select: text;
-  -webkit-user-select: text;
-  -ms-user-select: text;
   user-select: text;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .line-h-3{line-height:12px}

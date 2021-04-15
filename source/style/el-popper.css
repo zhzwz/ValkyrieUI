@@ -1,0 +1,8 @@
+.el-popper[x-placement^=top] .popper__arrow,
+.el-popper[x-placement^=top] .popper__arrow::after {
+  border-top-color: rgba(64, 64, 64, 0.9);
+}
+.el-popper[x-placement^=bottom] .popper__arrow,
+.el-popper[x-placement^=bottom] .popper__arrow::after {
+  border-bottom-color: rgba(64, 64, 64, 0.9);
+}
