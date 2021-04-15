@@ -1,3 +1,8 @@
+import clearUpPackage from './method/clearUpPackage'
+import autoWaKuang from './method/autoWaKuang'
+
+const cache = ValkyrieCache
+
 const app = Vue.createApp({
   data() {
     return {
@@ -7,9 +12,14 @@ const app = Vue.createApp({
 
       jy: 0, qn: 0,
 
+      // 持久化选项
       options: {
-        activeTitle: true,
-
+        // 动态标签
+        showDynamicTitle: true,
+        // 面板显示开关
+        showPanelScore: true,
+        showPanelTask: true,
+        // 频道显示开关
         showChannelCh: true,
         showChannelTm: true,
         showChannelFa: true,
@@ -19,6 +29,7 @@ const app = Vue.createApp({
         showChannelRu: true,
       },
 
+      // 聊天相关
       showChannelOptions: false,
       chatValue: '',
       channelValue: 'chat',
@@ -29,160 +40,126 @@ const app = Vue.createApp({
         { name: '门派', value: 'fam' },
         { name: '全区', value: 'es' },
       ],
-
+      // 地图弹窗
       showRoomMapDialog: false,
     }
   },
   computed: {
-    // 属性
-    score() { return Valkyrie.score },
-    id() { return this.score.id || '' },
+    cache() {
+      return ValkyrieCache
+    },
+    map() { return cache.map },
+    room() { return cache.room },
+    role() { return cache.role },
+    score() { return cache.score },
+    state() { return cache.state },
+    seller() { return cache.seller },
+    sellList() { return cache.sellList },
+    packList() { return cache.packList },
+    packLimit() { return cache.packLimit },
+    equipList() { return cache.equipList },
+    storeList() { return cache.storeList },
+    skillList() { return cache.skillList },
+    skillLimit() { return cache.skillLimit },
+    storeLimit() { return cache.storeLimit },
+
+    smCount() { return cache.smCount },
+    smTotal() { return cache.smTotal },
+    smTarget() { return cache.smTarget },
+    ymCount() { return cache.ymCount },
+    ymTotal() { return cache.ymTotal },
+    ymTarget() { return cache.ymTarget },
+    ymTargetX() { return cache.ymTargetX },
+    ymTargetY() { return cache.ymTargetY },
+    ybCount() { return cache.ybCount },
+    ybTotal() { return cache.ybTotal },
+    fbCount() { return cache.fbCount },
+    wdCount() { return cache.wdCount },
+    wdTotal() { return cache.wdTotal },
+    wdValue() { return cache.wdValue },
+    qaValue() { return cache.qaValue },
+    xyValue() { return cache.xyValue },
+    mpValue() { return cache.mpValue },
+
+    lxCost() { return cache.lxCost },
+    xxCost() { return cache.xxCost },
+    hpPercentage() { return cache.hpPercentage },
+    mpPercentage() { return cache.mpPercentage },
+
+    packCount() { return this.packList.length },
+    roomName() { return `${this.room.x} ${this.room.y}` },
     jyCache() { return Number(this.score.exp) || 0 },
     qnCache() { return Number(this.score.pot) || 0 },
-    genderValue() { return ['女', '男'].findIndex(item => item === this.score.gender) }, // 0=女 1=男 -1
-    hpPercentage() { return parseInt((this.score.hp / this.score.max_hp) * 100) || 0 },
-    mpPercentage() { return parseInt((this.score.mp / this.score.max_mp) * 100) || 0 },
-    wx1() { return Number(this.score.int) || 0 },
-    wx2() { return Number(this.score.int_add) || 0 },
-    xxxl() { return parseInt(this.score.study_per ) || 0 },
-    lxxl() { return parseInt(this.score.lianxi_per) || 0 },
-    energy() {
-      this.score.jingli.match(/^(\d+)[^\d]+(\d+)[^\d]+(\d+)[^\d]+$/)
-      const value = Number(RegExp.$1) || 0
-      const limit = Number(RegExp.$2) || 0
-      const today = Number(RegExp.$3) || 0
-      return { value, limit, today }
-    },
-    // 本地角色信息
-    role() { return common.getValue(this.id) || {} },
-    name() { return this.role.name || '' },
-    server() { return this.role.server || '' },
-    // 状态
-    state() { return Valkyrie.state || {} },
-    stateText() { return `${this.state.text1} ${this.state.text2}` },
+    stateValue() { return this.state.value },
+    stateText() { return `${this.state.text}${this.state.detail}` },
+    id() { return this.role.id || `` },
+    name() { return this.role.name || `` },
+    server() { return this.role.server || `` },
+    genderValue() { return ['女', '男'].findIndex(item => item === this.score.gender) },
     tabTitle() { return `${this.name} ${this.stateText} ${this.server}` },
 
-    // 房间
-    room() { return Valkyrie.room },
-    roomName() { return `${this.room.x} ${this.room.y}` },
-    map() { return Valkyrie.map },
+    // energy() {
+    //   this.score.jingli.match(/^(\d+)[^\d]+(\d+)[^\d]+(\d+)[^\d]+$/)
+    //   const value = Number(RegExp.$1) || 0
+    //   const limit = Number(RegExp.$2) || 0
+    //   const today = Number(RegExp.$3) || 0
+    //   return { value, limit, today }
+    // },
 
-    // 技能
-    skill() {
-      return Valkyrie.skill
-    },
-    skillList() {
-      return this.skill.list
-    },
-    lxCost() { // 练习每一跳消耗＝(先天悟性＋后天悟性)×(1＋练习效率%－先天悟性%)
-      return parseInt((this.wx1 + this.wx2) * (1 + this.lxxl / 100 - this.wx1 / 100))
-    },
-    xxCost() { // 学习每一跳消耗＝(先天悟性＋后天悟性)×(1＋学习效率%－先天悟性%)×3
-      return parseInt((this.wx1 + this.wx2) * (1 + this.xxxl / 100 - this.wx1 / 100) * 3)
-    },
-
-    // 任务
-    task() {
-      return Valkyrie.task
-    },
-    smCount() {
-      return this.task.smCount
-    },
-    smTotal() {
-      return this.task.smTotal
-    },
-    smTarget() {
-      return this.task.smTarget
-    },
-    ymCount() {
-      return this.task.ymCount
-    },
-    ymTotal() {
-      return this.task.ymTotal
-    },
-    ymTarget() {
-      return this.task.ymTarget
-    },
-    ymTargetX() {
-      return this.task.ymTargetX
-    },
-    ymTargetY() {
-      return this.task.ymTargetY
-    },
-    ybCount() {
-      return this.task.ybCount
-    },
-    ybTotal() {
-      return this.task.ybTotal
-    },
-    fbCount() {
-      return this.task.fbCount
-    },
-    wdCount() {
-      return this.task.wdCount
-    },
-    wdTotal() {
-      return this.task.wdTotal
-    },
-    wdValue() {
-      return this.task.wdValue
-    },
-    qaValue() {
-      return this.task.qaValue
-    },
-    xyValue() {
-      return this.task.xyValue
-    },
-    mpValue() {
-      return this.task.mpValue
-    },
-
-    // 宽度自适应
-    isNotMobile() { return this.widthValue > 768 },
-    showSidebarLeft() { return this.id && (this.isNotMobile || this.showLeft) },
-    showSidebarRight() { return this.id && (this.isNotMobile || this.showRight) },
+    // 聊天
     chatList() {
-      return Valkyrie.channel.list.filter(item =>
-        (item.isCh && this.options.showChannelCh)
+      return cache.chatList.filter(
+        item => (item.isCh && this.options.showChannelCh)
         || (item.isTm && this.options.showChannelTm)
         || (item.isFa && this.options.showChannelFa)
         || (item.isPt && this.options.showChannelPt)
         || (item.isEs && this.options.showChannelEs)
         || (item.isSy && this.options.showChannelSy)
-        || (item.isRu && this.options.showChannelRu))
+        || (item.isRu && this.options.showChannelRu)
+      )
     },
     chatListCount() {
       return this.chatList.length
     },
+    // 宽度自适应
+    isNotMobile() { return this.widthValue > 768 },
+    showSidebarLeft() { return this.id && (this.isNotMobile || this.showLeft) },
+    showSidebarRight() { return this.id && (this.isNotMobile || this.showRight) },
   },
   watch: {
-    tabTitle(value) { document.title = value },
-    jyCache(value) { gsap.to(this.$data, { duration: 0.5, jy: value }) },
-    qnCache(value) { gsap.to(this.$data, { duration: 0.5, qn: value }) },
+    // 网页标签名称
+    tabTitle(value) {
+      document.title = value
+    },
+    // 数字动态递增：经验、潜能
+    jyCache(value) {
+      if (document.hidden) this.jy = value
+      else Gsap.to(this.$data, { duration: 0.5, jy: value })
+    },
+    qnCache(value) {
+      if (document.hidden) this.qn = value
+      else Gsap.to(this.$data, { duration: 0.5, qn: value })
+    },
+    // 聊天滚动到底部
     async chatListCount() {
       await Vue.nextTick()
       document.querySelector('.v-channel-scroll').scrollIntoView({ behavior: 'smooth' })
     },
   },
   methods: {
-    sendCommand(command) {
-      ValkyrieWorker.sendCommand(command)
-    },
-    sendCommands(...args) {
-      ValkyrieWorker.sendCommands(...args)
-    },
+    // 引入 ValkyrieWorker 的六个方法
+    sendCommand(command) { ValkyrieWorker.sendCommand(command) },
+    sendCommands(...args) { ValkyrieWorker.sendCommands(...args) },
+    onData(data) { ValkyrieWorker.onData(data) },
+    onText(text) { ValkyrieWorker.onText(text) },
+    on(type, handler) { return ValkyrieWorker.on(type, handler.bind(this)) },
+    off(id) { ValkyrieWorker.off(id) },
 
-    on(type, handler) {
-      return ValkyrieWorker.on(type, handler)
-    },
-    once(type, handler) {
-      return ValkyrieWorker.once(type, handler)
-    },
-    off(id) {
-      ValkyrieWorker.off(id)
-    },
     wait(ms = 256) {
       return new Promise(resolve => setTimeout(() => resolve(), ms))
+    },
+    timeText() {
+      return new Date().toLocaleTimeString('en-DE')
     },
 
     clickMapIcon() {
@@ -214,18 +191,19 @@ const app = Vue.createApp({
       }, 1000)
     },
 
-    actionWaKuang() {
-      this.sendCommands('stopstate,wakuang')
-    },
     actionXiuLian() {
-      this.sendCommands('stopstate,jh fam 0 start,go west,go west,go north,go enter,go west,xiulian')
+      return new Promise((resolve, reject) => {
+        this.sendCommands('stopstate,jh fam 0 start,go west,go west,go north,go enter,go west,xiulian')
+      })
     },
     actionWuMiao() {
-      this.sendCommands('stopstate,jh fam 0 start,go north,go north,go west,dazuo')
+      return new Promise((resolve, reject) => {
+        this.sendCommands('stopstate,jh fam 0 start,go north,go north,go west,dazuo')
+      })
     },
-
+    autoWaKuang,
+    clearUpPackage,
   },
-
   mounted() {
     window.onresize = () => {
       this.updateWindowWidth()
@@ -236,5 +214,27 @@ const app = Vue.createApp({
 })
 
 app.use(Element3)
+
+import SIDEBAR_LEFT from './html/sidebar-left.html'
+import SIDEBAR_RIGHT from './html/sidebar-right.html'
+import ROOM_TITLE from './html/game-room-title.html'
+
+const head = document.head
+const body = document.body
+const appendElement = Util.appendElement
+// Google Font
+appendElement(head, 'link', { rel: 'preconnect', href: 'https://fonts.gstatic.com' })
+appendElement(head, 'link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap' })
+// Element3 CSS
+appendElement(head, 'link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/element3@0.0.39/lib/theme-chalk/index.css' })
+//
+appendElement(body, 'div', { class: 'valkyrie' })
+appendElement(body, 'div', { class: 'v-background' })
+appendElement(body, 'div', { class: 'v-sidebar v-sidebar-left' })
+appendElement(body, 'div', { class: 'v-sidebar v-sidebar-right' })
+document.querySelector(`.room-title`).innerHTML = ``
+document.querySelector(`.room-title`).className = `v-room-title v-header`
+document.querySelector(`#role_panel > ul > li.panel_item.active`).className += ` v-header font-cursive`
+document.querySelector(`.valkyrie`).innerHTML = SIDEBAR_LEFT + SIDEBAR_RIGHT + ROOM_TITLE
 
 export default app

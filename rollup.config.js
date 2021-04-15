@@ -3,6 +3,9 @@ import { string } from 'rollup-plugin-string'
 import cleanup from 'rollup-plugin-cleanup'
 import clear from 'rollup-plugin-clear'
 
+import postcss from 'rollup-plugin-postcss'
+import cssnano from 'cssnano'
+
 const metadata = `// ==UserScript==
 // @name         ${ name }
 // @namespace    https://greasyfork.org/scripts/422519-valkyrie
@@ -20,9 +23,12 @@ const metadata = `// ==UserScript==
 // ==/UserScript==
 
 /* eslint-env es6 */
-/* global common:readonly gsap:readonly */
-/* global Vue:readonly Element3:readonly */
-/* global ValkyrieWorker:readonly  Valkyrie:readonly */
+/* global Vue:readonly */
+/* global Element3:readonly */
+/* global Gsap:readonly */
+/* global Util:readonly */
+/* global ValkyrieCache:readonly */
+/* global ValkyrieWorker:readonly */
 `
 
 export default {
@@ -34,16 +40,16 @@ export default {
   },
   plugins: [
     cleanup(),
-    string({
-      include: [
-        'source/html/*.html',
-        'source/style/*.css',
+    postcss({
+      plugins: [
+        cssnano(),
       ],
     }),
+    string({
+      include: [ 'source/html/*.html' ],
+    }),
     clear({
-      targets: [
-        'bundle/',
-      ],
+      targets: ['bundle/'],
     }),
   ],
 }

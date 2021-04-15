@@ -2,9 +2,9 @@
   <div class="v-sidebar-inner" v-show="showSidebarRight">
     <!-- header -->
     <div class="v-header">
-      <span class="v-font v-unselectable">聊天频道</span>
+      <span class="font-cursive v-unselectable">聊天频道</span>
       <el-tooltip class="item" effect="dark" content="显示内容筛选" placement="bottom">
-        <i class="el-icon-more-outline v-cursor-pointer" @click="showChannelOptions = !showChannelOptions"></i>
+        <i class="el-icon-setting cursor-pointer" @click="showChannelOptions = !showChannelOptions"></i>
       </el-tooltip>
     </div>
     <!-- options -->
@@ -18,10 +18,6 @@
         <el-checkbox v-model="options.showChannelEs" label="全区"></el-checkbox>
         <el-checkbox v-model="options.showChannelRu" label="谣言"></el-checkbox>
         <el-checkbox v-model="options.showChannelSy" label="系统"></el-checkbox>
-        <!-- <div class="v-channel-options-title">你的聊天发送至频道</div>
-        <el-select v-model="channelValue">
-          <el-option v-for="item in channelSelections" :key="item.value" :label="item.name" :value="item.value"></el-option>
-        </el-select> -->
       </div>
     </el-collapse-transition>
     <!-- list -->
@@ -30,7 +26,7 @@
         <div class="v-channel-title v-unselectable">
           <span v-if="item.isSelf===true"  class="v-channel-time" v-text="item.timeText"></span>
           <span
-            class="v-channel-name v-cursor-pointer"
+            class="v-channel-name cursor-pointer"
             v-html="`<${item.tag}>【${item.titleText}】${item.name}</${item.tag}>`"
             @click="sendCommands(`look3 ${item.id},look3 body of ${item.id}`)"
           ></span>
@@ -53,7 +49,7 @@
         :rows="2" resize="none"
         maxlength="200" show-word-limit
       ></el-input>
-      <i class="el-icon-s-promotion v-unselectable v-cursor-pointer" style="width: 2em; text-align: center;" @click="clickChatIcon()"></i>
+      <i class="el-icon-s-promotion v-unselectable cursor-pointer" style="width: 2em; text-align: center;" @click="clickChatIcon()"></i>
     </div>
   </div>
 </teleport>

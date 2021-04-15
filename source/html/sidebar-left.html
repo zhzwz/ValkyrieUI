@@ -1,39 +1,54 @@
 <teleport to=".v-sidebar-left">
   <div class="v-sidebar-inner unselectable" v-show="showSidebarLeft">
-    <!-- header -->
+    <!-- 角色 -->
     <div class="v-header">
       <div>
-        <span class="v-font" v-text="name"></span>
+        <span class="font-cursive" v-text="name"></span>
         <i v-if="genderValue===0" style="padding-left: 0.5em;" class="el-icon-female"></i>
         <i v-if="genderValue===1" style="padding-left: 0.5em;" class="el-icon-male"></i>
       </div>
-      <i class="el-icon-menu"></i>
+      <div>
+        <i class="el-icon-menu mr-2"></i>
+        <i
+          class="cursor-pointer"
+          :class="options.showPanelScore ? `el-icon-caret-bottom` : `el-icon-caret-right`"
+          @click="options.showPanelScore = !options.showPanelScore"
+        ></i>
+      </div>
     </div>
-    <!-- score -->
-    <div class="v-score">
-      <div class="v-score-row">
-        <div class="v-score-title v-font" v-html="score.level"></div>
-        <div class="v-score-value v-font" v-text="score.family"></div>
+    <transition name="show-panel">
+      <div class="v-score" v-show="options.showPanelScore">
+        <!-- 境界 门派 -->
+        <div class="v-score-row">
+          <div class="v-score-title font-cursive" v-html="score.level"></div>
+          <div class="v-score-value font-cursive" v-text="score.family"></div>
+        </div>
+        <!-- 气血 -->
+        <el-progress class="v-percentage v-percentage-hp" :text-inside="true" :stroke-width="16" :percentage="hpPercentage"
+        ></el-progress>
+        <!-- 内力 -->
+        <el-progress class="v-percentage v-percentage-mp" :text-inside="true" :stroke-width="16" :percentage="mpPercentage"
+        ></el-progress>
+        <!-- 经验 -->
+        <div class="v-score-row">
+          <div class="v-score-title font-cursive">经验</div>
+          <div class="v-score-value" v-text="Number(jy.toFixed()).toLocaleString()"></div>
+        </div>
+        <!-- 潜能 -->
+        <div class="v-score-row">
+          <div class="v-score-title font-cursive">潜能</div>
+          <div class="v-score-value" v-text="Number(qn.toFixed()).toLocaleString()"></div>
+        </div>
       </div>
-
-      <el-progress class="v-percentage v-percentage-hp" :text-inside="true" :stroke-width="16" :percentage="hpPercentage"
-      ></el-progress>
-      <el-progress class="v-percentage v-percentage-mp" :text-inside="true" :stroke-width="16" :percentage="mpPercentage"
-      ></el-progress>
-
-      <div class="v-score-row">
-        <div class="v-score-title v-font">经验</div>
-        <div class="v-score-value" v-text="Number(jy.toFixed()).toLocaleString()"></div>
-      </div>
-      <div class="v-score-row">
-        <div class="v-score-title v-font">潜能</div>
-        <div class="v-score-value" v-text="Number(qn.toFixed()).toLocaleString()"></div>
-      </div>
-
-
-    </div>
+    </transition>
 
     <!-- 任务 -->
+    <div class="v-header">
+      <div>
+        <span class="font-cursive">任务</span>
+      </div>
+      <i class="el-icon-setting"></i>
+    </div>
     <div class="font-4 font-cursive line-h-4 px-4">
       <!-- 请安 -->
       <div class="d-flex py-1" :class="!qaValue ? 'red-text' : 'green-text'" v-show="!qaValue">
@@ -92,10 +107,10 @@
     </div>
     <!-- 功能 -->
     <div class="d-flex flex-wrap font-4 font-cursive px-4 py-1">
-      <span class="span-button flex-1-0 mx-1" @click="actionWaKuang()">挖矿</span>
+      <span class="span-button flex-1-0 mx-1" @click="autoWaKuang()">挖矿</span>
       <span class="span-button flex-1-0 mx-1" @click="actionXiuLian()">修炼</span>
       <span class="span-button flex-1-0 mx-1" @click="actionWuMiao()">武庙</span>
-      <span class="span-button flex-1-0 mx-1">〇〇〇〇</span>
+      <span class="span-button flex-1-0 mx-1" @click="clearUpPackage()">整理背包</span>
       <span class="span-button flex-1-0 mx-1">〇〇〇〇</span>
       <span class="span-button flex-1-0 mx-1">〇〇〇〇</span>
       <span class="span-button flex-1-0 mx-1">〇〇〇〇</span>

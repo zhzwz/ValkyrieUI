@@ -5,10 +5,10 @@
     "body": ["/* ${1:Comments} */"],
     "description": "创建单行注释",
   },
-  "多行注释": {
+  "/* 多行注释 */": {
     "scope": "javascript,typescript",
     "prefix": "lll",
-    "body": ["/**", " * ${1:Comments}", " */"],
+    "body": ["/** ${1:comments}", " * @param {} ", " * @return {}", " */"],
     "description": "创建多行注释",
   },
   "日志输出": {

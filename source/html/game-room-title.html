@@ -1,13 +1,17 @@
 <teleport to=".v-room-title">
-  <span class="v-room-name v-font v-unselectable" v-text="roomName"></span>
-  <i class="el-icon-map-location v-cursor-pointer" @click="clickMapIcon()"></i>
+  <span class="v-room-name font-cursive unselectable" v-text="roomName"></span>
+  <i class="el-icon-map-location cursor-pointer" @click="clickMapIcon()"></i>
   <!-- 地图弹窗 -->
   <el-dialog
-    :width="`${map.width}px`"
-    :title="roomName" center destroy-on-close
+    :width="`${cache.map.width}px`"
+    :title="cache.room.x + ' ' + cache.room.y" center destroy-on-close
     :visible.sync="showRoomMapDialog"
     v-model:visible="showRoomMapDialog"
   >
-    <div class="v-room-map v-unselectable" :style="`max-width:${map.width}px;max-height:${map.height}px;`" v-html="map.svg"></div>
+    <div
+      class="v-room-map unselectable"
+      :style="`max-width: ${cache.map.width}px; max-height: ${cache.map.height}px;`"
+      v-html="cache.map.svg"
+    ></div>
   </el-dialog>
 </teleport>
