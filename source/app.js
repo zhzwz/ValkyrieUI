@@ -6,11 +6,12 @@ const cache = ValkyrieCache
 const app = Vue.createApp({
   data() {
     return {
-      widthValue: 0,
+      width: 0,
       showLeft: false,
       showRight: false,
 
-      jy: 0, qn: 0,
+      jy: 0,
+      qn: 0,
 
       // 持久化选项
       options: {
@@ -19,6 +20,7 @@ const app = Vue.createApp({
         // 面板显示开关
         showPanelScore: true,
         showPanelTask: true,
+        showPanelOnekey: true,
         // 频道显示开关
         showChannelCh: true,
         showChannelTm: true,
@@ -27,12 +29,18 @@ const app = Vue.createApp({
         showChannelEs: true,
         showChannelSy: true,
         showChannelRu: true,
+        // 任务
+        canTaskSm: true,
+        canTaskSmCard: true,
+        canTaskSmStore: true,
+        canTaskYm: true,
+        canTaskYmSweep: true,
       },
 
       // 聊天相关
-      showChannelOptions: false,
-      chatValue: '',
-      channelValue: 'chat',
+      // showChannelOptions: false,
+      chat: '',
+      channel: 'chat',
       channelSelections: [
         { name: '世界', value: 'chat' },
         { name: '队伍', value: 'tm' },
@@ -40,63 +48,32 @@ const app = Vue.createApp({
         { name: '门派', value: 'fam' },
         { name: '全区', value: 'es' },
       ],
-      // 地图弹窗
-      showRoomMapDialog: false,
+      // 弹窗
+      showChannelDialog: false,
+      showMapDialog: false,
+      showTaskDialog: false,
     }
   },
   computed: {
     cache() {
       return ValkyrieCache
     },
-    map() { return cache.map },
-    room() { return cache.room },
-    role() { return cache.role },
-    score() { return cache.score },
-    state() { return cache.state },
-    seller() { return cache.seller },
-    sellList() { return cache.sellList },
-    packList() { return cache.packList },
-    packLimit() { return cache.packLimit },
-    equipList() { return cache.equipList },
-    storeList() { return cache.storeList },
-    skillList() { return cache.skillList },
-    skillLimit() { return cache.skillLimit },
-    storeLimit() { return cache.storeLimit },
-
-    smCount() { return cache.smCount },
-    smTotal() { return cache.smTotal },
-    smTarget() { return cache.smTarget },
-    ymCount() { return cache.ymCount },
-    ymTotal() { return cache.ymTotal },
-    ymTarget() { return cache.ymTarget },
-    ymTargetX() { return cache.ymTargetX },
-    ymTargetY() { return cache.ymTargetY },
-    ybCount() { return cache.ybCount },
-    ybTotal() { return cache.ybTotal },
-    fbCount() { return cache.fbCount },
-    wdCount() { return cache.wdCount },
-    wdTotal() { return cache.wdTotal },
-    wdValue() { return cache.wdValue },
-    qaValue() { return cache.qaValue },
-    xyValue() { return cache.xyValue },
-    mpValue() { return cache.mpValue },
-
-    lxCost() { return cache.lxCost },
-    xxCost() { return cache.xxCost },
-    hpPercentage() { return cache.hpPercentage },
-    mpPercentage() { return cache.mpPercentage },
-
-    packCount() { return this.packList.length },
-    roomName() { return `${this.room.x} ${this.room.y}` },
-    jyCache() { return Number(this.score.exp) || 0 },
-    qnCache() { return Number(this.score.pot) || 0 },
-    stateValue() { return this.state.value },
-    stateText() { return `${this.state.text}${this.state.detail}` },
-    id() { return this.role.id || `` },
-    name() { return this.role.name || `` },
-    server() { return this.role.server || `` },
-    genderValue() { return ['女', '男'].findIndex(item => item === this.score.gender) },
-    tabTitle() { return `${this.name} ${this.stateText} ${this.server}` },
+    id() {
+      return this.cache.role.id || ``
+    },
+    title() {
+      const id = this.cache.role.id || ``
+      const name = this.cache.role.name || ``
+      const state = this.cache.state.text + this.cache.state.detail || ``
+      const server = this.cache.role.server || ``
+      return id ? `${name} ${state} ${server}` : ``
+    },
+    jyCache() {
+      return Number(this.cache.score.exp) || 0
+    },
+    qnCache() {
+      return Number(this.cache.score.pot) || 0
+    },
 
     // energy() {
     //   this.score.jingli.match(/^(\d+)[^\d]+(\d+)[^\d]+(\d+)[^\d]+$/)
@@ -118,17 +95,23 @@ const app = Vue.createApp({
         || (item.isRu && this.options.showChannelRu)
       )
     },
-    chatListCount() {
+    chatCount() {
       return this.chatList.length
     },
     // 宽度自适应
-    isNotMobile() { return this.widthValue > 768 },
-    showSidebarLeft() { return this.id && (this.isNotMobile || this.showLeft) },
-    showSidebarRight() { return this.id && (this.isNotMobile || this.showRight) },
+    // isMobile() {
+    //   return this.width <= 768
+    // },
+    // showSidebarLeft() {
+    //   return this.id && (!this.isMobile || this.showLeft)
+    // },
+    // showSidebarRight() {
+    //   return this.id && (!this.isMobile || this.showRight)
+    // },
   },
   watch: {
     // 网页标签名称
-    tabTitle(value) {
+    title(value) {
       document.title = value
     },
     // 数字动态递增：经验、潜能
@@ -141,9 +124,12 @@ const app = Vue.createApp({
       else Gsap.to(this.$data, { duration: 0.5, qn: value })
     },
     // 聊天滚动到底部
-    async chatListCount() {
+    async chatCount() {
       await Vue.nextTick()
       document.querySelector('.v-channel-scroll').scrollIntoView({ behavior: 'smooth' })
+    },
+    options(value) {
+      console.log(value)
     },
   },
   methods: {
@@ -163,18 +149,18 @@ const app = Vue.createApp({
     },
 
     clickMapIcon() {
-      this.showRoomMapDialog = !this.showRoomMapDialog
-      if (this.showRoomMapDialog) this.sendCommand(`map`)
+      this.showMapDialog = !this.showMapDialog
+      if (this.showMapDialog) this.sendCommand(`map`)
     },
     clickChatIcon() {
-      const value = this.chatValue.trim()
-      if (value) this.sendCommand(`${this.channelValue} ${value}`)
-      this.chatValue = ''
+      const value = this.chat.trim()
+      if (value) this.sendCommand(`${this.channel} ${value}`)
+      this.chat = ''
     },
 
     // 刷新窗口宽度
     updateWindowWidth() {
-      this.widthValue = document.body.clientWidth
+      this.width = document.body.clientWidth
     },
     // 刷新游戏工具栏位置
     updateToolBar() {
@@ -191,18 +177,18 @@ const app = Vue.createApp({
       }, 1000)
     },
 
-    actionXiuLian() {
-      return new Promise((resolve, reject) => {
-        this.sendCommands('stopstate,jh fam 0 start,go west,go west,go north,go enter,go west,xiulian')
-      })
-    },
-    actionWuMiao() {
-      return new Promise((resolve, reject) => {
-        this.sendCommands('stopstate,jh fam 0 start,go north,go north,go west,dazuo')
-      })
-    },
-    autoWaKuang,
-    clearUpPackage,
+    // actionXiuLian() {
+    //   return new Promise((resolve, reject) => {
+    //     this.sendCommands('stopstate,jh fam 0 start,go west,go west,go north,go enter,go west,xiulian')
+    //   })
+    // },
+    // actionWuMiao() {
+    //   return new Promise((resolve, reject) => {
+    //     this.sendCommands('stopstate,jh fam 0 start,go north,go north,go west,dazuo')
+    //   })
+    // },
+    // autoWaKuang,
+    // clearUpPackage,
   },
   mounted() {
     window.onresize = () => {
@@ -214,6 +200,9 @@ const app = Vue.createApp({
 })
 
 app.use(Element3)
+app.config.warnHandler = function(msg, vm, trace) {
+  // `trace` 是组件的继承关系追踪
+}
 
 import SIDEBAR_LEFT from './html/sidebar-left.html'
 import SIDEBAR_RIGHT from './html/sidebar-right.html'

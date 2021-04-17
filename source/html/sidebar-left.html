@@ -3,12 +3,13 @@
     <!-- 角色 -->
     <div class="v-header">
       <div>
-        <span class="font-cursive" v-text="name"></span>
-        <i v-if="genderValue===0" style="padding-left: 0.5em;" class="el-icon-female"></i>
-        <i v-if="genderValue===1" style="padding-left: 0.5em;" class="el-icon-male"></i>
+        <span class="font-cursive mr-2" v-text="cache.role.name"></span>
+        <i v-if="cache.genderValue===0" class="el-icon-female"></i>
+        <i v-else-if="cache.genderValue===1" class="el-icon-male"></i>
+        <i v-else class="el-icon-cherry"></i>
       </div>
       <div>
-        <i class="el-icon-menu mr-2"></i>
+        <i class="el-icon-menu cursor-pointer mr-2"></i>
         <i
           class="cursor-pointer"
           :class="options.showPanelScore ? `el-icon-caret-bottom` : `el-icon-caret-right`"
@@ -20,14 +21,14 @@
       <div class="v-score" v-show="options.showPanelScore">
         <!-- 境界 门派 -->
         <div class="v-score-row">
-          <div class="v-score-title font-cursive" v-html="score.level"></div>
-          <div class="v-score-value font-cursive" v-text="score.family"></div>
+          <div class="v-score-title font-cursive" v-html="cache.score.level"></div>
+          <div class="v-score-value font-cursive" v-text="cache.score.family"></div>
         </div>
         <!-- 气血 -->
-        <el-progress class="v-percentage v-percentage-hp" :text-inside="true" :stroke-width="16" :percentage="hpPercentage"
+        <el-progress class="v-percentage v-percentage-hp" :text-inside="true" :stroke-width="16" :percentage="cache.hpPercentage"
         ></el-progress>
         <!-- 内力 -->
-        <el-progress class="v-percentage v-percentage-mp" :text-inside="true" :stroke-width="16" :percentage="mpPercentage"
+        <el-progress class="v-percentage v-percentage-mp" :text-inside="true" :stroke-width="16" :percentage="cache.mpPercentage"
         ></el-progress>
         <!-- 经验 -->
         <div class="v-score-row">
@@ -47,76 +48,121 @@
       <div>
         <span class="font-cursive">任务</span>
       </div>
-      <i class="el-icon-setting"></i>
+      <div>
+        <i class="el-icon-setting cursor-pointer mr-2" @click="showTaskDialog = true"></i>
+        <i
+          class="cursor-pointer"
+          :class="options.showPanelTask ? `el-icon-caret-bottom` : `el-icon-caret-right`"
+          @click="options.showPanelTask = !options.showPanelTask"
+        ></i>
+      </div>
     </div>
-    <div class="font-4 font-cursive line-h-4 px-4">
-      <!-- 请安 -->
-      <div class="d-flex py-1" :class="!qaValue ? 'red-text' : 'green-text'" v-show="!qaValue">
-        <div class="flex-0-0">日常请安</div>
-        <div class="flex-1-0 text-align-right" v-text="xyValue ? '已完成' : '未完成'"></div>
-      </div>
-      <!-- 师门 -->
-      <div class="d-flex py-1" :class="smCount < 20 ? 'red-text' : 'green-text'">
-        <div class="flex-0-0">日常师门</div>
-        <div class="flex-1-0 font-monospace text-align-right">{{smCount}}/20/{{smTotal}}</div>
-      </div>
-      <div class="d-flex py-1" :class="smTarget ? 'red-text' : 'green-text'" v-show="smTarget">
-        <div class="flex-0-0">师门目标</div>
-        <div class="flex-1-0 text-align-right" v-html="smTarget"></div>
-      </div>
-      <!-- 追捕 -->
-      <div class="d-flex py-1" :class="ymCount < 20 ? 'red-text' : 'green-text'">
-        <div class="flex-0-0">日常追捕</div>
-        <div class="flex-1-0 font-monospace text-align-right">{{ymCount}}/20/{{ymTotal}}</div>
-      </div>
-      <div class="d-flex py-1" :class="ymTarget ? 'red-text' : 'green-text'" v-show="ymTarget">
-        <div class="flex-0-0">追捕目标</div>
-        <div class="flex-1-0 text-align-right">
-          <span>{{ymTargetX}} {{ymTargetY}}</span>
-          <span class="yellow-text pl-2">{{ymTarget}}</span>
+    <transition name="show-panel">
+      <div class="v-task font-cursive" v-show="options.showPanelTask">
+        <!-- 请安 -->
+        <div class="d-flex" :class="!cache.qaValue ? 'red-text' : 'green-text'" v-show="!cache.qaValue">
+          <div class="flex-0-0">日常请安</div>
+          <div class="flex-1-0 text-align-right" v-text="cache.qaValue ? '已完成' : '未完成'"></div>
         </div>
-      </div>
-      <!-- 副本 -->
-      <div class="d-flex py-1" :class="fbCount < 20 ? 'red-text' : 'green-text'">
-        <div class="flex-0-0">日常副本</div>
-        <div class="flex-1-0 font-monospace text-align-right">{{fbCount}}/20</div>
-      </div>
-      <!-- 武道塔 -->
-      <div class="d-flex py-1" :class="!wdValue || wdCount < wdTotal ? 'red-text' : 'green-text'">
-        <div class="flex-0-0">日常武道</div>
-        <div class="flex-1-0 text-align-right">
-          <span>{{wdValue?'':'可重置'}}</span>
-          <span class="font-monospace pl-2">{{wdCount}}/{{wdTotal}}</span>
+        <!-- 师门 -->
+        <div class="d-flex" :class="cache.smCount < 20 ? 'red-text' : 'green-text'">
+          <div class="flex-0-0">日常师门</div>
+          <div class="flex-1-0 font-monospace text-align-right">{{cache.smCount}}/20/{{cache.smTotal}}</div>
         </div>
-      </div>
-      <!-- 运镖 -->
-      <div class="d-flex py-1" :class="ybCount < 20 ? 'red-text' : 'green-text'">
-        <div class="flex-0-0">周常运镖</div>
-        <div class="flex-1-0 font-monospace text-align-right">{{ybCount}}/20/{{ybTotal}}</div>
-      </div>
-      <!-- 襄阳战 -->
-      <div class="d-flex py-1" :class="!xyValue ? 'red-text' : 'green-text'">
-        <div class="flex-0-0">周常襄阳</div>
-        <div class="flex-1-0 text-align-right" v-text="xyValue ? '已完成' : '未完成'"></div>
-      </div>
-      <!-- 门派 BOSS -->
-      <div class="d-flex py-1" :class="!mpValue ? 'red-text' : 'green-text'">
-        <div class="flex-0-0">周常门派</div>
-        <div class="flex-1-0 text-align-right" v-text="mpValue ? '已完成' : '未完成'"></div>
-      </div>
-    </div>
-    <!-- 功能 -->
-    <div class="d-flex flex-wrap font-4 font-cursive px-4 py-1">
-      <span class="span-button flex-1-0 mx-1" @click="autoWaKuang()">挖矿</span>
-      <span class="span-button flex-1-0 mx-1" @click="actionXiuLian()">修炼</span>
-      <span class="span-button flex-1-0 mx-1" @click="actionWuMiao()">武庙</span>
-      <span class="span-button flex-1-0 mx-1" @click="clearUpPackage()">整理背包</span>
-      <span class="span-button flex-1-0 mx-1">〇〇〇〇</span>
-      <span class="span-button flex-1-0 mx-1">〇〇〇〇</span>
-      <span class="span-button flex-1-0 mx-1">〇〇〇〇</span>
-      <span class="span-button flex-1-0 mx-1">〇〇〇〇</span>
-      <!-- 出招配置 -->
-    </div>
+        <div class="d-flex" :class="cache.smTarget ? 'red-text' : 'green-text'" v-show="cache.smTarget">
+          <div class="flex-0-0">师门目标</div>
+          <div class="flex-1-0 text-align-right" v-html="cache.smTarget"></div>
+        </div>
+        <!-- 追捕 -->
+        <div class="d-flex" :class="cache.ymCount < 20 ? 'red-text' : 'green-text'">
+          <div class="flex-0-0">日常追捕</div>
+          <div class="flex-1-0 font-monospace text-align-right">{{cache.ymCount}}/20/{{cache.ymTotal}}</div>
+        </div>
+        <div class="d-flex" :class="cache.ymTarget ? 'red-text' : 'green-text'" v-show="cache.ymTarget">
+          <div class="flex-0-0">追捕目标</div>
+          <div class="flex-1-0 text-align-right">
+            <span>{{cache.ymTargetX}} {{cache.ymTargetY}}</span>
+            <span class="yellow-text pl-2">{{cache.ymTarget}}</span>
+          </div>
+        </div>
+        <!-- 副本 -->
+        <div class="d-flex" :class="cache.fbCount < 20 ? 'red-text' : 'green-text'">
+          <div class="flex-0-0">日常副本</div>
+          <div class="flex-1-0 font-monospace text-align-right">{{cache.fbCount}}/20</div>
+        </div>
+        <!-- 武道塔 -->
+        <div class="d-flex" :class="!cache.wdValue || cache.wdCount < cache.wdTotal ? 'red-text' : 'green-text'">
+          <div class="flex-0-0">日常武道</div>
+          <div class="flex-1-0 text-align-right">
+            <span>{{cache.wdValue?'':'可重置'}}</span>
+            <span class="font-monospace pl-2">{{cache.wdCount}}/{{cache.wdTotal}}</span>
+          </div>
+        </div>
+        <!-- 运镖 -->
+        <div class="d-flex" :class="cache.ybCount < 20 ? 'red-text' : 'green-text'">
+          <div class="flex-0-0">周常运镖</div>
+          <div class="flex-1-0 font-monospace text-align-right">{{cache.ybCount}}/20/{{cache.ybTotal}}</div>
+        </div>
+        <!-- 襄阳战 -->
+        <div class="d-flex" :class="!cache.xyValue ? 'red-text' : 'green-text'">
+          <div class="flex-0-0">周常襄阳</div>
+          <div class="flex-1-0 text-align-right" v-text="cache.xyValue ? '已完成' : '未完成'"></div>
+        </div>
+        <!-- 门派 BOSS -->
+        <div class="d-flex" :class="!cache.mpValue ? 'red-text' : 'green-text'">
+          <div class="flex-0-0">周常门派</div>
+          <div class="flex-1-0 text-align-right" v-text="cache.mpValue ? '已完成' : '未完成'"></div>
+        </div>
 
+        <!-- 按钮 -->
+        <div class="v-button">开始日常</div>
+        <div class="d-flex">
+          <span class="v-button flex-1-0">襄阳战</span>
+          <span class="v-button flex-1-0">运镖</span>
+        </div>
+        <!-- 弹窗 -->
+        <el-dialog
+          title="任务设置" center destroy-on-close
+          :visible.sync="showTaskDialog"
+          v-model:visible="showTaskDialog"
+        >
+          <div class="font-monospace unselectable">
+            <div>师门</div>
+            <el-checkbox label="自动师门" v-model="options.canTaskSm" ></el-checkbox>
+            <el-checkbox label="仓库物品" :disabled="!options.canTaskSm" v-model="options.canTaskSmStore"></el-checkbox>
+            <el-checkbox label="师门令牌" :disabled="!options.canTaskSm" v-model="options.canTaskSmCard"></el-checkbox>
+            <div>衙门追捕</div>
+            <el-checkbox label="自动追捕" v-model="options.canTaskYm"></el-checkbox>
+            <el-checkbox label="元宝扫荡" :disabled="!options.canTaskYm" v-model="options.canTaskYmSweep"></el-checkbox>
+          </div>
+        </el-dialog>
+      </div>
+    </transition>
+
+    <!-- 快捷 -->
+    <div class="v-header">
+      <div><span class="font-cursive">快捷</span></div>
+      <div>
+        <i
+          class="cursor-pointer"
+          :class="options.showPanelOnekey ? `el-icon-caret-bottom` : `el-icon-caret-right`"
+          @click="options.showPanelOnekey = !options.showPanelOnekey"
+        ></i>
+      </div>
+    </div>
+    <transition name="show-panel">
+      <div class="v-onekey d-flex flex-wrap font-cursive" v-show="options.showPanelOnekey">
+        <span class="v-button flex-1-0" @click="autoWaKuang()">挖矿</span>
+        <span class="v-button flex-1-0" @click="cache.xiulian()">修炼</span>
+        <span class="v-button flex-1-0" @click="actionWuMiao()">武庙</span>
+        <span class="v-button flex-1-0" @click="clearUpPackage()">整理背包</span>
+        <!-- <span class="v-button flex-1-0 mx-1">〇〇〇〇</span>
+        <span class="v-button flex-1-0 mx-1">〇〇〇〇</span>
+        <span class="v-button flex-1-0 mx-1">〇〇〇〇</span>
+        <span class="v-button flex-1-0 mx-1">〇〇〇〇</span> -->
+      </div>
+    </transition>
+
+    <!-- 出招配置 -->
   </div>
 </teleport>

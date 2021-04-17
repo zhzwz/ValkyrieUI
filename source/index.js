@@ -5,12 +5,17 @@ import "./style/el-popper.css"
 import "./style/el-select.css"
 import "./style/el-tooltip.css"
 import "./style/el-checkbox.css"
+import "./style/el-dialog.css"
 
+import "./style/v-task.css"
 import "./style/v-score.css"
 import "./style/v-header.css"
 import "./style/v-sidebar.css"
 import "./style/v-channel.css"
 import "./style/v-background.css"
+import "./style/v-button.css"
+import "./style/v-onekey.css"
+
 
 import "./style/transition.css"
 

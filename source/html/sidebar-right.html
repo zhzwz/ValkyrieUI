@@ -2,24 +2,25 @@
   <div class="v-sidebar-inner" v-show="showSidebarRight">
     <!-- header -->
     <div class="v-header">
-      <span class="font-cursive v-unselectable">聊天频道</span>
-      <el-tooltip class="item" effect="dark" content="显示内容筛选" placement="bottom">
-        <i class="el-icon-setting cursor-pointer" @click="showChannelOptions = !showChannelOptions"></i>
-      </el-tooltip>
+      <span class="font-cursive v-unselectable">聊天</span>
+      <i class="el-icon-setting cursor-pointer" @click="showChannelDialog = true"></i>
     </div>
     <!-- options -->
-    <el-collapse-transition>
-      <div v-show="showChannelOptions" class="v-channel-options">
-        <div class="v-channel-options-title">显示选中频道的内容</div>
+    <el-dialog
+      title="聊天频道筛选" center destroy-on-close
+      :visible.sync="showChannelDialog" v-model:visible="showChannelDialog"
+    >
+      <div class="font-monospace unselectable">
         <el-checkbox v-model="options.showChannelCh" label="世界"></el-checkbox>
         <el-checkbox v-model="options.showChannelTm" label="队伍"></el-checkbox>
         <el-checkbox v-model="options.showChannelFa" label="门派"></el-checkbox>
         <el-checkbox v-model="options.showChannelPt" label="帮会"></el-checkbox>
+        <div></div>
         <el-checkbox v-model="options.showChannelEs" label="全区"></el-checkbox>
         <el-checkbox v-model="options.showChannelRu" label="谣言"></el-checkbox>
         <el-checkbox v-model="options.showChannelSy" label="系统"></el-checkbox>
       </div>
-    </el-collapse-transition>
+    </el-dialog>
     <!-- list -->
     <div class="v-channel-list">
       <div v-for="item in chatList" :class="['v-channel-item', id===item.id ? 'v-channel-self' : '']">
@@ -37,14 +38,14 @@
       <div class="v-channel-scroll"></div>
     </div>
     <!-- select -->
-    <el-select class="v-channel-select" v-model="channelValue">
+    <el-select class="v-channel-select" v-model="channel">
       <el-option v-for="item in channelSelections" :key="item.value" :label="item.name" :value="item.value"></el-option>
     </el-select>
     <!-- input -->
     <div class="v-channel-input">
       <el-input
         type="textarea"
-        v-model="chatValue"
+        v-model="chat"
         v-on:keyup.enter="clickChatIcon()"
         :rows="2" resize="none"
         maxlength="200" show-word-limit
