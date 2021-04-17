@@ -1,8 +1,10 @@
-.v-header {
-  padding: 0 0.5em;
-  font-size: 1.25em;
-  line-height: 1.75em;
-  height: 1.75em !important;
+.v-header,
+.dialog-header {
+  padding: 0 0.5rem;
+  margin-bottom: 0.125rem;
+  font-size: 1.25rem;
+  line-height: 2rem;
+  height: 2rem !important;
 
   display: flex;
   flex-wrap: nowrap;
@@ -12,4 +14,28 @@
 
   color: rgb(216, 216, 216) !important;
   background-color: rgba(32, 32, 32, 0.75) !important;
+}
+
+.dialog-header {
+  display: flex;
+  border-bottom: 1px solid rgb(64, 64, 64) !important;
+}
+.dialog-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  line-height: 1.75rem !important;
+  color: rgb(216, 216, 216) !important;
+}
+.dialog-title {
+  flex: 1 0 auto;
+  height: 1.75rem;
+  line-height: 1.75rem !important;
+  color: rgb(216, 216, 216) !important;
+  font-family: 'Ma Shan Zheng', cursive !important;
+}
+.dialog-close {
+  width: 1.75rem;
+  height: 1.75rem;
+  line-height: 1.75rem !important;
+  color: rgb(216, 216, 216) !important;
 }

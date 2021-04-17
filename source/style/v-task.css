@@ -1,0 +1,11 @@
+.v-task {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  padding: 0.5rem;
+  overflow: hidden;
+}
+
+.v-task .v-button {
+  font-size: 1rem;
+  margin: 0.5rem 0.5rem 0 0.5rem;
+}

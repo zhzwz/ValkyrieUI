@@ -1,0 +1,7 @@
+.v-onekey {
+  padding: 0.5rem;
+}
+
+.v-onekey > .v-button {
+  font-size: 1rem;
+}
