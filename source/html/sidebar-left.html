@@ -3,9 +3,9 @@
     <!-- 角色 -->
     <div class="v-header">
       <div>
-        <span class="font-cursive mr-2" v-text="cache.role.name"></span>
-        <i v-if="cache.genderValue===0" class="el-icon-female"></i>
-        <i v-else-if="cache.genderValue===1" class="el-icon-male"></i>
+        <span class="font-cursive mr-2" v-text="Valkyrie.role.name"></span>
+        <i v-if="Valkyrie.genderValue===0" class="el-icon-female"></i>
+        <i v-else-if="Valkyrie.genderValue===1" class="el-icon-male"></i>
         <i v-else class="el-icon-cherry"></i>
       </div>
       <div>
@@ -21,14 +21,14 @@
       <div class="v-score" v-show="options.showPanelScore">
         <!-- 境界 门派 -->
         <div class="v-score-row">
-          <div class="v-score-title font-cursive" v-html="cache.score.level"></div>
-          <div class="v-score-value font-cursive" v-text="cache.score.family"></div>
+          <div class="v-score-title font-cursive" v-html="Valkyrie.score.level"></div>
+          <div class="v-score-value font-cursive" v-text="Valkyrie.score.family"></div>
         </div>
         <!-- 气血 -->
-        <el-progress class="v-percentage v-percentage-hp" :text-inside="true" :stroke-width="16" :percentage="cache.hpPercentage"
+        <el-progress class="v-percentage v-percentage-hp" :text-inside="true" :stroke-width="16" :percentage="Valkyrie.hpPercentage"
         ></el-progress>
         <!-- 内力 -->
-        <el-progress class="v-percentage v-percentage-mp" :text-inside="true" :stroke-width="16" :percentage="cache.mpPercentage"
+        <el-progress class="v-percentage v-percentage-mp" :text-inside="true" :stroke-width="16" :percentage="Valkyrie.mpPercentage"
         ></el-progress>
         <!-- 经验 -->
         <div class="v-score-row">
@@ -60,58 +60,58 @@
     <transition name="show-panel">
       <div class="v-task font-cursive" v-show="options.showPanelTask">
         <!-- 请安 -->
-        <div class="d-flex" :class="!cache.qaValue ? 'red-text' : 'green-text'" v-show="!cache.qaValue">
+        <div class="d-flex" :class="!Valkyrie.qaValue ? 'red-text' : 'green-text'" v-show="!Valkyrie.qaValue">
           <div class="flex-0-0">日常请安</div>
-          <div class="flex-1-0 text-align-right" v-text="cache.qaValue ? '已完成' : '未完成'"></div>
+          <div class="flex-1-0 text-align-right" v-text="Valkyrie.qaValue ? '已完成' : '未完成'"></div>
         </div>
         <!-- 师门 -->
-        <div class="d-flex" :class="cache.smCount < 20 ? 'red-text' : 'green-text'">
+        <div class="d-flex" :class="Valkyrie.smCount < 20 ? 'red-text' : 'green-text'">
           <div class="flex-0-0">日常师门</div>
-          <div class="flex-1-0 font-monospace text-align-right">{{cache.smCount}}/20/{{cache.smTotal}}</div>
+          <div class="flex-1-0 font-monospace text-align-right">{{Valkyrie.smCount}}/20/{{Valkyrie.smTotal}}</div>
         </div>
-        <div class="d-flex" :class="cache.smTarget ? 'red-text' : 'green-text'" v-show="cache.smTarget">
+        <div class="d-flex" :class="Valkyrie.smTarget ? 'red-text' : 'green-text'" v-show="Valkyrie.smTarget">
           <div class="flex-0-0">师门目标</div>
-          <div class="flex-1-0 text-align-right" v-html="cache.smTarget"></div>
+          <div class="flex-1-0 text-align-right" v-html="Valkyrie.smTarget"></div>
         </div>
         <!-- 追捕 -->
-        <div class="d-flex" :class="cache.ymCount < 20 ? 'red-text' : 'green-text'">
+        <div class="d-flex" :class="Valkyrie.ymCount < 20 ? 'red-text' : 'green-text'">
           <div class="flex-0-0">日常追捕</div>
-          <div class="flex-1-0 font-monospace text-align-right">{{cache.ymCount}}/20/{{cache.ymTotal}}</div>
+          <div class="flex-1-0 font-monospace text-align-right">{{Valkyrie.ymCount}}/20/{{Valkyrie.ymTotal}}</div>
         </div>
-        <div class="d-flex" :class="cache.ymTarget ? 'red-text' : 'green-text'" v-show="cache.ymTarget">
+        <div class="d-flex" :class="Valkyrie.ymTarget ? 'red-text' : 'green-text'" v-show="Valkyrie.ymTarget">
           <div class="flex-0-0">追捕目标</div>
           <div class="flex-1-0 text-align-right">
-            <span>{{cache.ymTargetX}} {{cache.ymTargetY}}</span>
-            <span class="yellow-text pl-2">{{cache.ymTarget}}</span>
+            <span>{{Valkyrie.ymTargetX}} {{Valkyrie.ymTargetY}}</span>
+            <span class="yellow-text pl-2">{{Valkyrie.ymTarget}}</span>
           </div>
         </div>
         <!-- 副本 -->
-        <div class="d-flex" :class="cache.fbCount < 20 ? 'red-text' : 'green-text'">
+        <div class="d-flex" :class="Valkyrie.fbCount < 20 ? 'red-text' : 'green-text'">
           <div class="flex-0-0">日常副本</div>
-          <div class="flex-1-0 font-monospace text-align-right">{{cache.fbCount}}/20</div>
+          <div class="flex-1-0 font-monospace text-align-right">{{Valkyrie.fbCount}}/20</div>
         </div>
         <!-- 武道塔 -->
-        <div class="d-flex" :class="!cache.wdValue || cache.wdCount < cache.wdTotal ? 'red-text' : 'green-text'">
+        <div class="d-flex" :class="!Valkyrie.wdValue || Valkyrie.wdCount < Valkyrie.wdTotal ? 'red-text' : 'green-text'">
           <div class="flex-0-0">日常武道</div>
           <div class="flex-1-0 text-align-right">
-            <span>{{cache.wdValue?'':'可重置'}}</span>
-            <span class="font-monospace pl-2">{{cache.wdCount}}/{{cache.wdTotal}}</span>
+            <span>{{Valkyrie.wdValue?'':'可重置'}}</span>
+            <span class="font-monospace pl-2">{{Valkyrie.wdCount}}/{{Valkyrie.wdTotal}}</span>
           </div>
         </div>
         <!-- 运镖 -->
-        <div class="d-flex" :class="cache.ybCount < 20 ? 'red-text' : 'green-text'">
+        <div class="d-flex" :class="Valkyrie.ybCount < 20 ? 'red-text' : 'green-text'">
           <div class="flex-0-0">周常运镖</div>
-          <div class="flex-1-0 font-monospace text-align-right">{{cache.ybCount}}/20/{{cache.ybTotal}}</div>
+          <div class="flex-1-0 font-monospace text-align-right">{{Valkyrie.ybCount}}/20/{{Valkyrie.ybTotal}}</div>
         </div>
         <!-- 襄阳战 -->
-        <div class="d-flex" :class="!cache.xyValue ? 'red-text' : 'green-text'">
+        <div class="d-flex" :class="!Valkyrie.xyValue ? 'red-text' : 'green-text'">
           <div class="flex-0-0">周常襄阳</div>
-          <div class="flex-1-0 text-align-right" v-text="cache.xyValue ? '已完成' : '未完成'"></div>
+          <div class="flex-1-0 text-align-right" v-text="Valkyrie.xyValue ? '已完成' : '未完成'"></div>
         </div>
         <!-- 门派 BOSS -->
-        <div class="d-flex" :class="!cache.mpValue ? 'red-text' : 'green-text'">
+        <div class="d-flex" :class="!Valkyrie.mpValue ? 'red-text' : 'green-text'">
           <div class="flex-0-0">周常门派</div>
-          <div class="flex-1-0 text-align-right" v-text="cache.mpValue ? '已完成' : '未完成'"></div>
+          <div class="flex-1-0 text-align-right" v-text="Valkyrie.mpValue ? '已完成' : '未完成'"></div>
         </div>
 
         <!-- 按钮 -->
@@ -153,7 +153,7 @@
     <transition name="show-panel">
       <div class="v-onekey d-flex flex-wrap font-cursive" v-show="options.showPanelOnekey">
         <span class="v-button flex-1-0" @click="autoWaKuang()">挖矿</span>
-        <span class="v-button flex-1-0" @click="cache.xiulian()">修炼</span>
+        <span class="v-button flex-1-0" @click="Valkyrie.xiulian()">修炼</span>
         <span class="v-button flex-1-0" @click="actionWuMiao()">武庙</span>
         <span class="v-button flex-1-0" @click="clearUpPackage()">整理背包</span>
         <!-- <span class="v-button flex-1-0 mx-1">〇〇〇〇</span>

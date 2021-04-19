@@ -1,8 +1,3 @@
-import clearUpPackage from './method/clearUpPackage'
-import autoWaKuang from './method/autoWaKuang'
-
-const cache = ValkyrieCache
-
 const app = Vue.createApp({
   data() {
     return {
@@ -55,24 +50,24 @@ const app = Vue.createApp({
     }
   },
   computed: {
-    cache() {
-      return ValkyrieCache
+    Valkyrie() {
+      return Valkyrie
     },
     id() {
-      return this.cache.role.id || ``
+      return Valkyrie.role.id || ``
     },
     title() {
-      const id = this.cache.role.id || ``
-      const name = this.cache.role.name || ``
-      const state = this.cache.state.text + this.cache.state.detail || ``
-      const server = this.cache.role.server || ``
+      const id = Valkyrie.role.id || ``
+      const name = Valkyrie.role.name || ``
+      const state = Valkyrie.state.text + Valkyrie.state.detail || ``
+      const server = Valkyrie.role.server || ``
       return id ? `${name} ${state} ${server}` : ``
     },
     jyCache() {
-      return Number(this.cache.score.exp) || 0
+      return Number(Valkyrie.score.exp) || 0
     },
     qnCache() {
-      return Number(this.cache.score.pot) || 0
+      return Number(Valkyrie.score.pot) || 0
     },
 
     // energy() {
