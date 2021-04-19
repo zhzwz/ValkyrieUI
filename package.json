@@ -1,6 +1,6 @@
 {
   "name": "ValkyrieUI",
-  "version": "0.0.602",
+  "version": "0.0.603",
   "author": "Coder Zhao <coderzhaoziwei@outlook.com>",
   "description": "《武神传说》的浏览器脚本程序，需要配合浏览器插件 Tampermonkey 使用。",
   "repository": "https://github.com/coderzhaoziwei/ValkyrieUI.git",

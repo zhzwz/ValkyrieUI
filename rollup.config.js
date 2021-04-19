@@ -8,11 +8,12 @@ import cssnano from 'cssnano'
 
 const metadata = `// ==UserScript==
 // @name         ${ name }
-// @namespace    https://greasyfork.org/scripts/422519-valkyrie
+// @namespace    https://greasyfork.org/scripts/422519
 // @version      ${ version }
 // @author       ${ author }
 // @modified     ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString('en-DE')}
 // @description  文字游戏《武神传说》的浏览器脚本程序 | 界面拓展 | 功能增强
+// @homepage     https://greasyfork.org/scripts/422519
 // @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/ValkyrieWorker/source/image/wakuang.png
 // @supportURL   https://github.com/coderzhaoziwei/Valkyrie/issues
 // @match        http://*.wsmud.com/*
@@ -25,31 +26,29 @@ const metadata = `// ==UserScript==
 /* eslint-env es6 */
 /* global Vue:readonly */
 /* global Element3:readonly */
-/* global Gsap:readonly */
-/* global Util:readonly */
-/* global ValkyrieCache:readonly */
-/* global ValkyrieWorker:readonly */
+/* global gsap:readonly */
+/* global Valkyrie:readonly */
 `
 
 export default {
-  input: 'source/index.js',
+  input: `source/index.js`,
   output: {
-    file: 'bundle/Valkyrie.user.js',
-    format: 'iife',
+    file: `bundle/valkyrieui.user.js`,
+    format: `iife`,
     banner: metadata,
   },
   plugins: [
     cleanup(),
     postcss({
       plugins: [
-        cssnano(),
+        cssnano(), // CSS 压缩等功能
       ],
     }),
     string({
-      include: [ 'source/html/*.html' ],
+      include: [`source/html/*.html`],
     }),
     clear({
-      targets: ['bundle/'],
+      targets: [`bundle/`],
     }),
   ],
 }

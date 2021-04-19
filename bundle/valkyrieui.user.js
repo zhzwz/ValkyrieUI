@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Valkyrie
+// @name         ValkyrieUI
 // @namespace    https://greasyfork.org/scripts/422519-valkyrie
-// @version      0.0.602
+// @version      0.0.603
 // @author       Coder Zhao <coderzhaoziwei@outlook.com>
-// @modified     2021/4/17 16:22:55
+// @modified     2021/4/19 15:42:08
 // @description  文字游戏《武神传说》的浏览器脚本程序 | 界面拓展 | 功能增强
 // @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/ValkyrieWorker/source/image/wakuang.png
 // @supportURL   https://github.com/coderzhaoziwei/Valkyrie/issues
@@ -24,73 +24,6 @@
 
 (function () {
   'use strict';
-
-  function clearUpPackage() {
-    return new Promise((resolve, reject) => {
-      this.sendCommands(`stopstate,jh fam 0 start,go north,go west,pack,store`);
-      const token = `${new Date().toLocaleTimeString('en-DE')} 整理背包`;
-      const id1 = this.on('list', data => Util.hasOwn(data, 'stores') && (() => {
-        this.off(id1);
-        this.storeList.forEach(store => {
-          const item = this.packList.find(pack => pack.name === store.name);
-          if (item) this.sendCommands(`store ${item.count} ${item.id}`);
-        });
-        this.sendCommands(`jh fam 0 start,go south,go east,sell all,pack,1000,tm ${token}`);
-      })());
-      const id2 = this.on('msg', data => data.ch === 'tm' && data.content === token && (() => {
-        this.off(id2);
-        if (this.packCount < this.packLimit) {
-          resolve();
-          this.onText(`<hig>整理背包完毕。</hig><hic>[${this.packCount}/${this.packLimit}]</hic>`);
-        } else {
-          reject();
-          this.onText(`<hig>整理背包完毕。</hig><hir>[${this.packCount}/${this.packLimit}]</hir>`);
-        }
-      })());
-    })
-  }
-
-  function autoWaKuang() {
-    return new Promise((resolve, reject) => {
-      const token = `${new Date().toLocaleTimeString(`en-DE`)} 寻找铁镐`;
-      this.sendCommands(`stopstate,jh fam 0 start,go north,go west,pack,store,tm ${token}`);
-      const id1 = this.on(`msg`, data => data.ch === `tm` && data.content === token && (() => {
-        this.off(id1);
-        const eq0 = (this.equipList[0] || {}).name || ``;
-        if (eq0.includes(`铁镐`)) {
-          this.onText(`<hig>你已经装备了${eq0}。</hig>`);
-          this.sendCommands(`stopstate,wakuang`);
-          return resolve()
-        }
-        const item = this.packList.find(item => item.name.includes(`铁镐`));
-        if (item) {
-          this.onText(`<hig>你的背包中有${item.name}。</hig>`);
-          this.sendCommands(`stopstate,wakuang`);
-          return resolve()
-        }
-        const store = this.storeList.find(item => item.name.includes(`铁镐`));
-        if (store) {
-          this.onText(`<hig>你的仓库中有${store.name}。</hig>`);
-          this.sendCommands(`stopstate,qu 1 ${store.id},wakuang`);
-          return resolve()
-        }
-        this.clearUpPackage().then(() => {
-          const token2 = `${new Date().toLocaleTimeString(`en-DE`)} 购买铁镐`;
-          this.sendCommands(`stopstate,jh fam 0 start,go east,go east,go south,1000,list {npc:铁匠铺老板},tm ${token2}`);
-          const id2 = this.on(`msg`, data => data.ch === `tm` && data.content === token2 && (() => {
-            this.off(id2);
-            const item = this.shopList.find(item => item.name.includes(`铁镐`));
-            if (item) {
-              this.sendCommands(`stopstate,buy 1 ${item.id} from ${this.shopId},wakuang`);
-            }
-          })());
-        }).catch(() => {
-          this.onText(`<hir>背包容量不足，无法购买铁镐。</hir>`);
-          reject();
-        });
-      })());
-    })
-  }
 
   var SIDEBAR_LEFT = "<teleport to=\".v-sidebar-left\">\n  <div class=\"v-sidebar-inner unselectable\" v-show=\"showSidebarLeft\">\n    <!-- 角色 -->\n    <div class=\"v-header\">\n      <div>\n        <span class=\"font-cursive mr-2\" v-text=\"cache.role.name\"></span>\n        <i v-if=\"cache.genderValue===0\" class=\"el-icon-female\"></i>\n        <i v-else-if=\"cache.genderValue===1\" class=\"el-icon-male\"></i>\n        <i v-else class=\"el-icon-cherry\"></i>\n      </div>\n      <div>\n        <i class=\"el-icon-menu cursor-pointer mr-2\"></i>\n        <i\n          class=\"cursor-pointer\"\n          :class=\"options.showPanelScore ? `el-icon-caret-bottom` : `el-icon-caret-right`\"\n          @click=\"options.showPanelScore = !options.showPanelScore\"\n        ></i>\n      </div>\n    </div>\n    <transition name=\"show-panel\">\n      <div class=\"v-score\" v-show=\"options.showPanelScore\">\n        <!-- 境界 门派 -->\n        <div class=\"v-score-row\">\n          <div class=\"v-score-title font-cursive\" v-html=\"cache.score.level\"></div>\n          <div class=\"v-score-value font-cursive\" v-text=\"cache.score.family\"></div>\n        </div>\n        <!-- 气血 -->\n        <el-progress class=\"v-percentage v-percentage-hp\" :text-inside=\"true\" :stroke-width=\"16\" :percentage=\"cache.hpPercentage\"\n        ></el-progress>\n        <!-- 内力 -->\n        <el-progress class=\"v-percentage v-percentage-mp\" :text-inside=\"true\" :stroke-width=\"16\" :percentage=\"cache.mpPercentage\"\n        ></el-progress>\n        <!-- 经验 -->\n        <div class=\"v-score-row\">\n          <div class=\"v-score-title font-cursive\">经验</div>\n          <div class=\"v-score-value\" v-text=\"Number(jy.toFixed()).toLocaleString()\"></div>\n        </div>\n        <!-- 潜能 -->\n        <div class=\"v-score-row\">\n          <div class=\"v-score-title font-cursive\">潜能</div>\n          <div class=\"v-score-value\" v-text=\"Number(qn.toFixed()).toLocaleString()\"></div>\n        </div>\n      </div>\n    </transition>\n\n    <!-- 任务 -->\n    <div class=\"v-header\">\n      <div>\n        <span class=\"font-cursive\">任务</span>\n      </div>\n      <div>\n        <i class=\"el-icon-setting cursor-pointer mr-2\" @click=\"showTaskDialog = true\"></i>\n        <i\n          class=\"cursor-pointer\"\n          :class=\"options.showPanelTask ? `el-icon-caret-bottom` : `el-icon-caret-right`\"\n          @click=\"options.showPanelTask = !options.showPanelTask\"\n        ></i>\n      </div>\n    </div>\n    <transition name=\"show-panel\">\n      <div class=\"v-task font-cursive\" v-show=\"options.showPanelTask\">\n        <!-- 请安 -->\n        <div class=\"d-flex\" :class=\"!cache.qaValue ? 'red-text' : 'green-text'\" v-show=\"!cache.qaValue\">\n          <div class=\"flex-0-0\">日常请安</div>\n          <div class=\"flex-1-0 text-align-right\" v-text=\"cache.qaValue ? '已完成' : '未完成'\"></div>\n        </div>\n        <!-- 师门 -->\n        <div class=\"d-flex\" :class=\"cache.smCount < 20 ? 'red-text' : 'green-text'\">\n          <div class=\"flex-0-0\">日常师门</div>\n          <div class=\"flex-1-0 font-monospace text-align-right\">{{cache.smCount}}/20/{{cache.smTotal}}</div>\n        </div>\n        <div class=\"d-flex\" :class=\"cache.smTarget ? 'red-text' : 'green-text'\" v-show=\"cache.smTarget\">\n          <div class=\"flex-0-0\">师门目标</div>\n          <div class=\"flex-1-0 text-align-right\" v-html=\"cache.smTarget\"></div>\n        </div>\n        <!-- 追捕 -->\n        <div class=\"d-flex\" :class=\"cache.ymCount < 20 ? 'red-text' : 'green-text'\">\n          <div class=\"flex-0-0\">日常追捕</div>\n          <div class=\"flex-1-0 font-monospace text-align-right\">{{cache.ymCount}}/20/{{cache.ymTotal}}</div>\n        </div>\n        <div class=\"d-flex\" :class=\"cache.ymTarget ? 'red-text' : 'green-text'\" v-show=\"cache.ymTarget\">\n          <div class=\"flex-0-0\">追捕目标</div>\n          <div class=\"flex-1-0 text-align-right\">\n            <span>{{cache.ymTargetX}} {{cache.ymTargetY}}</span>\n            <span class=\"yellow-text pl-2\">{{cache.ymTarget}}</span>\n          </div>\n        </div>\n        <!-- 副本 -->\n        <div class=\"d-flex\" :class=\"cache.fbCount < 20 ? 'red-text' : 'green-text'\">\n          <div class=\"flex-0-0\">日常副本</div>\n          <div class=\"flex-1-0 font-monospace text-align-right\">{{cache.fbCount}}/20</div>\n        </div>\n        <!-- 武道塔 -->\n        <div class=\"d-flex\" :class=\"!cache.wdValue || cache.wdCount < cache.wdTotal ? 'red-text' : 'green-text'\">\n          <div class=\"flex-0-0\">日常武道</div>\n          <div class=\"flex-1-0 text-align-right\">\n            <span>{{cache.wdValue?'':'可重置'}}</span>\n            <span class=\"font-monospace pl-2\">{{cache.wdCount}}/{{cache.wdTotal}}</span>\n          </div>\n        </div>\n        <!-- 运镖 -->\n        <div class=\"d-flex\" :class=\"cache.ybCount < 20 ? 'red-text' : 'green-text'\">\n          <div class=\"flex-0-0\">周常运镖</div>\n          <div class=\"flex-1-0 font-monospace text-align-right\">{{cache.ybCount}}/20/{{cache.ybTotal}}</div>\n        </div>\n        <!-- 襄阳战 -->\n        <div class=\"d-flex\" :class=\"!cache.xyValue ? 'red-text' : 'green-text'\">\n          <div class=\"flex-0-0\">周常襄阳</div>\n          <div class=\"flex-1-0 text-align-right\" v-text=\"cache.xyValue ? '已完成' : '未完成'\"></div>\n        </div>\n        <!-- 门派 BOSS -->\n        <div class=\"d-flex\" :class=\"!cache.mpValue ? 'red-text' : 'green-text'\">\n          <div class=\"flex-0-0\">周常门派</div>\n          <div class=\"flex-1-0 text-align-right\" v-text=\"cache.mpValue ? '已完成' : '未完成'\"></div>\n        </div>\n\n        <!-- 按钮 -->\n        <div class=\"v-button\">开始日常</div>\n        <div class=\"d-flex\">\n          <span class=\"v-button flex-1-0\">襄阳战</span>\n          <span class=\"v-button flex-1-0\">运镖</span>\n        </div>\n        <!-- 弹窗 -->\n        <el-dialog\n          title=\"任务设置\" center destroy-on-close\n          :visible.sync=\"showTaskDialog\"\n          v-model:visible=\"showTaskDialog\"\n        >\n          <div class=\"font-monospace unselectable\">\n            <div>师门</div>\n            <el-checkbox label=\"自动师门\" v-model=\"options.canTaskSm\" ></el-checkbox>\n            <el-checkbox label=\"仓库物品\" :disabled=\"!options.canTaskSm\" v-model=\"options.canTaskSmStore\"></el-checkbox>\n            <el-checkbox label=\"师门令牌\" :disabled=\"!options.canTaskSm\" v-model=\"options.canTaskSmCard\"></el-checkbox>\n            <div>衙门追捕</div>\n            <el-checkbox label=\"自动追捕\" v-model=\"options.canTaskYm\"></el-checkbox>\n            <el-checkbox label=\"元宝扫荡\" :disabled=\"!options.canTaskYm\" v-model=\"options.canTaskYmSweep\"></el-checkbox>\n          </div>\n        </el-dialog>\n      </div>\n    </transition>\n\n    <!-- 快捷 -->\n    <div class=\"v-header\">\n      <div><span class=\"font-cursive\">快捷</span></div>\n      <div>\n        <i\n          class=\"cursor-pointer\"\n          :class=\"options.showPanelOnekey ? `el-icon-caret-bottom` : `el-icon-caret-right`\"\n          @click=\"options.showPanelOnekey = !options.showPanelOnekey\"\n        ></i>\n      </div>\n    </div>\n    <transition name=\"show-panel\">\n      <div class=\"v-onekey d-flex flex-wrap font-cursive\" v-show=\"options.showPanelOnekey\">\n        <span class=\"v-button flex-1-0\" @click=\"autoWaKuang()\">挖矿</span>\n        <span class=\"v-button flex-1-0\" @click=\"cache.xiulian()\">修炼</span>\n        <span class=\"v-button flex-1-0\" @click=\"actionWuMiao()\">武庙</span>\n        <span class=\"v-button flex-1-0\" @click=\"clearUpPackage()\">整理背包</span>\n        <!-- <span class=\"v-button flex-1-0 mx-1\">〇〇〇〇</span>\n        <span class=\"v-button flex-1-0 mx-1\">〇〇〇〇</span>\n        <span class=\"v-button flex-1-0 mx-1\">〇〇〇〇</span>\n        <span class=\"v-button flex-1-0 mx-1\">〇〇〇〇</span> -->\n      </div>\n    </transition>\n\n    <!-- 出招配置 -->\n  </div>\n</teleport>\n";
 
@@ -143,12 +76,6 @@
       cache() {
         return ValkyrieCache
       },
-      jyCache() {
-        return Number(this.cache.score.exp) || 0
-      },
-      qnCache() {
-        return Number(this.cache.score.pot) || 0
-      },
       id() {
         return this.cache.role.id || ``
       },
@@ -158,6 +85,12 @@
         const state = this.cache.state.text + this.cache.state.detail || ``;
         const server = this.cache.role.server || ``;
         return id ? `${name} ${state} ${server}` : ``
+      },
+      jyCache() {
+        return Number(this.cache.score.exp) || 0
+      },
+      qnCache() {
+        return Number(this.cache.score.pot) || 0
       },
       chatList() {
         return cache.chatList.filter(
@@ -173,11 +106,6 @@
       chatCount() {
         return this.chatList.length
       },
-      isNotMobile() {
-        return this.width > 768
-      },
-      showSidebarLeft() { return this.id && (this.isNotMobile || this.showLeft) },
-      showSidebarRight() { return this.id && (this.isNotMobile || this.showRight) },
     },
     watch: {
       title(value) {
@@ -237,18 +165,6 @@
           document.querySelector('.right-bar').style.bottom = h1 + h2 + 'px';
         }, 1000);
       },
-      actionXiuLian() {
-        return new Promise((resolve, reject) => {
-          this.sendCommands('stopstate,jh fam 0 start,go west,go west,go north,go enter,go west,xiulian');
-        })
-      },
-      actionWuMiao() {
-        return new Promise((resolve, reject) => {
-          this.sendCommands('stopstate,jh fam 0 start,go north,go north,go west,dazuo');
-        })
-      },
-      autoWaKuang,
-      clearUpPackage,
     },
     mounted() {
       window.onresize = () => {
