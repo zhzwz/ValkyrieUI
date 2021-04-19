@@ -80,7 +80,7 @@ const app = Vue.createApp({
 
     // 聊天
     chatList() {
-      return cache.chatList.filter(
+      return Valkyrie.chatList.filter(
         item => (item.isCh && this.options.showChannelCh)
         || (item.isTm && this.options.showChannelTm)
         || (item.isFa && this.options.showChannelFa)
@@ -97,12 +97,12 @@ const app = Vue.createApp({
     // isMobile() {
     //   return this.width <= 768
     // },
-    // showSidebarLeft() {
-    //   return this.id && (!this.isMobile || this.showLeft)
-    // },
-    // showSidebarRight() {
-    //   return this.id && (!this.isMobile || this.showRight)
-    // },
+    showSidebarLeft() {
+      return this.id && (!this.isMobile || this.showLeft)
+    },
+    showSidebarRight() {
+      return this.id && (!this.isMobile || this.showRight)
+    },
   },
   watch: {
     // 网页标签名称
@@ -112,11 +112,11 @@ const app = Vue.createApp({
     // 数字动态递增：经验、潜能
     jyCache(value) {
       if (document.hidden) this.jy = value
-      else Gsap.to(this.$data, { duration: 0.5, jy: value })
+      else gsap.to(this.$data, { duration: 0.5, jy: value })
     },
     qnCache(value) {
       if (document.hidden) this.qn = value
-      else Gsap.to(this.$data, { duration: 0.5, qn: value })
+      else gsap.to(this.$data, { duration: 0.5, qn: value })
     },
     // 聊天滚动到底部
     async chatCount() {
@@ -128,16 +128,12 @@ const app = Vue.createApp({
     },
   },
   methods: {
-    // 引入 ValkyrieWorker 的六个方法
-    sendCommand(command) { ValkyrieWorker.sendCommand(command) },
-    sendCommands(...args) { ValkyrieWorker.sendCommands(...args) },
-    onData(data) { ValkyrieWorker.onData(data) },
-    onText(text) { ValkyrieWorker.onText(text) },
-    on(type, handler) { return ValkyrieWorker.on(type, handler.bind(this)) },
-    off(id) { ValkyrieWorker.off(id) },
-
-    wait(ms = 256) {
-      return new Promise(resolve => setTimeout(() => resolve(), ms))
+    // 引入 Valkyrie 的六个方法
+    sendCommand(command) {
+      Valkyrie.sendCommand(command)
+    },
+    sendCommands(...args) {
+      Valkyrie.sendCommands(...args)
     },
     timeText() {
       return new Date().toLocaleTimeString('en-DE')
@@ -154,7 +150,7 @@ const app = Vue.createApp({
     },
 
     // 刷新窗口宽度
-    updateWindowWidth() {
+    updateWidth() {
       this.width = document.body.clientWidth
     },
     // 刷新游戏工具栏位置
@@ -182,15 +178,13 @@ const app = Vue.createApp({
     //     this.sendCommands('stopstate,jh fam 0 start,go north,go north,go west,dazuo')
     //   })
     // },
-    // autoWaKuang,
-    // clearUpPackage,
   },
   mounted() {
     window.onresize = () => {
-      this.updateWindowWidth()
+      this.updateWidth()
       this.updateToolBar()
     }
-    this.updateWindowWidth()
+    this.updateWidth()
   },
 })
 
@@ -199,26 +193,27 @@ app.config.warnHandler = function(msg, vm, trace) {
   // `trace` 是组件的继承关系追踪
 }
 
-import SIDEBAR_LEFT from './html/sidebar-left.html'
-import SIDEBAR_RIGHT from './html/sidebar-right.html'
-import ROOM_TITLE from './html/game-room-title.html'
-
 const head = document.head
 const body = document.body
-const appendElement = Util.appendElement
 // Google Font
-appendElement(head, 'link', { rel: 'preconnect', href: 'https://fonts.gstatic.com' })
-appendElement(head, 'link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap' })
+Valkyrie.appendElement(head, `link`, { rel: `preconnect`, href: `https://fonts.gstatic.com` })
+Valkyrie.appendElement(head, `link`, { rel: `stylesheet`, href: `https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap` })
 // Element3 CSS
-appendElement(head, 'link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/element3@0.0.39/lib/theme-chalk/index.css' })
+Valkyrie.appendElement(head, `link`, { rel: `stylesheet`, href: `https://cdn.jsdelivr.net/npm/element3@0.0.39/lib/theme-chalk/index.css` })
 //
-appendElement(body, 'div', { class: 'valkyrie' })
-appendElement(body, 'div', { class: 'v-background' })
-appendElement(body, 'div', { class: 'v-sidebar v-sidebar-left' })
-appendElement(body, 'div', { class: 'v-sidebar v-sidebar-right' })
+Valkyrie.appendElement(body, `div`, { class: `valkyrie` })
+Valkyrie.appendElement(body, `div`, { class: `v-background` })
+Valkyrie.appendElement(body, `div`, { class: `v-sidebar v-sidebar-left` })
+Valkyrie.appendElement(body, `div`, { class: `v-sidebar v-sidebar-right` })
+
 document.querySelector(`.room-title`).innerHTML = ``
 document.querySelector(`.room-title`).className = `v-room-title v-header`
 document.querySelector(`#role_panel > ul > li.panel_item.active`).className += ` v-header font-cursive`
+
+import SIDEBAR_LEFT from "./html/sidebar-left.html"
+import SIDEBAR_RIGHT from "./html/sidebar-right.html"
+import ROOM_TITLE from "./html/game-room-title.html"
+
 document.querySelector(`.valkyrie`).innerHTML = SIDEBAR_LEFT + SIDEBAR_RIGHT + ROOM_TITLE
 
 export default app

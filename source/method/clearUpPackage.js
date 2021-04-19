@@ -7,7 +7,7 @@ export default function clearUpPackage() {
     const token = `${new Date().toLocaleTimeString('en-DE')} 整理背包`
 
     // 仓库数据监控
-    const id1 = this.on('list', data => Util.hasOwn(data, 'stores') && (() => {
+    const id1 = this.on('list', data => this.hasOwn(data, 'stores') && (() => {
       this.off(id1)
       this.storeList.forEach(store => {
         const item = this.packList.find(pack => pack.name === store.name)

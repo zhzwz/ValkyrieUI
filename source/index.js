@@ -22,10 +22,10 @@ import "./style/transition.css"
 import "./style/game.css"
 import "./style/init.css"
 
-const valkyrie = app.mount('.valkyrie')
+const ValkyrieUI = app.mount('.valkyrie')
 
 // 登录后获取角色数据，调整工具栏显示。
-valkyrie.on('login', async function(data) {
+Valkyrie.on('login', async function() {
   this.sendCommands('pack,score2,score')
   await this.wait(1000)
   document.querySelector('[command=skills]').click()
@@ -33,8 +33,8 @@ valkyrie.on('login', async function(data) {
   document.querySelector('[command=tasks]').click()
   await this.wait(1000)
   document.querySelector('.dialog-close').click()
-  this.updateToolBar()
+  ValkyrieUI.updateToolBar()
 })
 
 // 因为重写了地图弹窗，所以此处销毁地图数据。
-valkyrie.on('map', data => delete data.type)
+Valkyrie.on('map', data => delete data.type)

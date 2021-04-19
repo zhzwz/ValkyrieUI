@@ -25,6 +25,7 @@
   height: 1.75rem;
   line-height: 1.75rem !important;
   color: rgb(216, 216, 216) !important;
+  text-align: center;
 }
 .dialog-title {
   flex: 1 0 auto;
@@ -38,4 +39,6 @@
   height: 1.75rem;
   line-height: 1.75rem !important;
   color: rgb(216, 216, 216) !important;
+  right: 0 !important;
+  text-align: center;
 }

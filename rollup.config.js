@@ -8,13 +8,13 @@ import cssnano from 'cssnano'
 
 const metadata = `// ==UserScript==
 // @name         ${ name }
-// @namespace    https://greasyfork.org/scripts/422519
 // @homepage     https://greasyfork.org/scripts/422519
+// @namespace    https://greasyfork.org/scripts/422519
 // @version      ${ version }
 // @author       ${ author }
 // @modified     ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString('en-DE')}
-// @description  文字游戏《武神传说》的浏览器脚本程序 | 界面拓展 | 功能增强
-// @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/ValkyrieWorker/source/image/wakuang.png
+// @description  文字游戏《武神传说》的浏览器脚本程序 | 界面功能扩展 | UI 样式优化
+// @icon         https://cdn.jsdelivr.net/gh/coderzhaoziwei/Valkyrie/source/image/wakuang.png
 // @supportURL   https://github.com/coderzhaoziwei/Valkyrie/issues
 // @match        http://*.wsmud.com/*
 // @exclude      http://*.wsmud.com/pay*
